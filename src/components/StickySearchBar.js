@@ -75,6 +75,8 @@ const StickySearchBarComponent = ({
   const inputRef = useRef(null);
   const [activeIndex, setActiveIndex] = useState(-1);
   const [isScrolled, setIsScrolled] = useState(false);
+  const [showGradient, setShowGradient] = useState(false);
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 480);
   
   // Add scroll event listener
   useEffect(() => {
@@ -91,6 +93,23 @@ const StickySearchBarComponent = ({
       window.removeEventListener('scroll', handleScroll);
     };
   }, []);
+  
+  // Handle window resize for responsive behavior
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 480);
+    };
+    
+    window.addEventListener('resize', handleResize);
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
+  
+  // Update gradient visibility based on weather data and search focus
+  useEffect(() => {
+    setShowGradient(weatherData && !searchFocused);
+  }, [weatherData, searchFocused]);
 
   // Reset active index when suggestions change
   useEffect(() => {
@@ -201,6 +220,20 @@ const StickySearchBarComponent = ({
           style={{ margin: 0 }}
         >
           <SearchInputWrapper>
+            {showGradient && (
+              <div 
+                style={{
+                  position: 'absolute',
+                  right: isMobile ? '62px' : '70px',
+                  top: 0,
+                  height: '100%',
+                  width: isMobile ? '35px' : '30px',
+                  pointerEvents: 'none',
+                  zIndex: 1
+                }}
+              />
+            )}
+            
             <SearchInput
               ref={inputRef}
               type="text"
@@ -224,7 +257,13 @@ const StickySearchBarComponent = ({
                   alignItems: 'center',
                   gap: '5px',
                   color: 'rgba(255, 255, 255, 0.7)',
-                  pointerEvents: 'none'
+                  pointerEvents: 'none',
+                  background: 'rgba(0, 0, 0, 0.3)',
+                  borderRadius: '50px',
+                  padding: '4px 8px',
+                  zIndex: 2,
+                  minWidth: '60px',
+                  justifyContent: 'center'
                 }}
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
@@ -233,7 +272,7 @@ const StickySearchBarComponent = ({
                 <img 
                   src={weatherData.current.condition.icon} 
                   alt={weatherData.current.condition.text}
-                  style={{ width: '24px', height: '24px' }}
+                  style={{ width: '22px', height: '22px' }}
                 />
                 <span>{getTemperature(weatherData.current.temp_c, weatherData.current.temp_f)}°{unit}</span>
               </motion.div>

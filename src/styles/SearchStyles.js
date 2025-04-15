@@ -51,7 +51,6 @@ export const StickySearchBar = styled(motion.div)`
   -webkit-backdrop-filter: blur(2px);
   padding: 15px 0;
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
   display: flex;
   flex-direction: column;
   transition: all 0.3s ease;
@@ -126,7 +125,6 @@ export const FeaturedLocations = styled(motion.div)`
 
 export const LocationChip = styled(motion.button)`
   background: rgba(255, 255, 255, 0.15);
-  border: 1px solid rgba(255, 255, 255, 0.2);
   border-radius: 50px;
   padding: 8px 16px;
   color: white;
@@ -144,6 +142,7 @@ export const LocationChip = styled(motion.button)`
   scroll-snap-align: start;
   position: relative;
   overflow: hidden;
+  border: none;
   
   /* Add a threshold for tap events to distinguish from scrolling */
   user-select: none;
@@ -183,7 +182,7 @@ export const LocationChip = styled(motion.button)`
   
   &:hover {
     background: rgba(0, 0, 0, 0.3);
-    border-color: transparent;
+    border: none;
     transform: translateY(-2px);
     color: white;
     text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
@@ -197,7 +196,7 @@ export const LocationChip = styled(motion.button)`
   
   &:active {
     background: rgba(0, 0, 0, 0.4);
-    border-color: transparent;
+    border: none;
     transform: translateY(0);
     
     &::before {
@@ -232,6 +231,21 @@ export const SearchInputWrapper = styled.div`
   flex: 1;
   min-width: 0; /* Important for flex item to allow proper shrinking */
   width: 100%;
+  display: flex;
+  align-items: center;
+  box-shadow: none;
+  
+  /* Make sure weather icon container doesn't affect input text truncation */
+  & > div[style*="position: absolute"] {
+    z-index: 2;
+    margin-left: 4px; /* Add some spacing between text and icon */
+  }
+  
+  @media (max-width: 480px) {
+    /* Ensure proper truncation on mobile */
+    width: 100%;
+    overflow: hidden;
+  }
 `;
 
 export const SuggestionsContainer = styled(motion.div)`

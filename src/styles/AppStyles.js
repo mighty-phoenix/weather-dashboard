@@ -73,18 +73,19 @@ export const SearchInput = styled.input`
   font-size: ${FONT_SIZE.base};
   background: rgba(0, 0, 0, 0.3);
   color: #fff;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
   transition: all 0.3s ease;
   position: relative;
   z-index: 1;
   letter-spacing: 0.5px;
   text-indent: 2px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 
   &:focus {
     outline: none;
     background: rgba(0, 0, 0, 0.4);
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.35), 
-                0 0 0 2px rgba(255, 255, 255, 0.1),
+    box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.1),
                 0 0 0 1px rgba(0, 255, 163, 0.2),
                 0 0 0 4px rgba(220, 31, 255, 0.1);
     letter-spacing: 0.6px;
@@ -97,8 +98,7 @@ export const SearchInput = styled.input`
   
   &.focused {
     transform: scale(1.02);
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4), 
-                0 0 0 2px rgba(255, 255, 255, 0.1),
+    box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.1),
                 0 0 0 1px rgba(0, 255, 163, 0.2),
                 0 0 0 4px rgba(220, 31, 255, 0.1);
   }
@@ -108,6 +108,8 @@ export const SearchInput = styled.input`
     min-width: 160px;
     flex: 1 0 auto;
     padding: 15px 18px;
+    padding-right: 75px; /* Increase right padding to accommodate weather icon + temperature */
+    max-width: calc(100% - 10px); /* Ensure input doesn't overflow its container */
   }
 `;
 

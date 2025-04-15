@@ -264,7 +264,7 @@ function App() {
               
               {lastUpdated && (
                 <Attribution>
-                  Created with ❤️ by <a href="https://github.com/mighty-phoenix" target="_blank" rel="noopener noreferrer">Rakshit Kumar</a>
+                  Created with ❤️ by <a href="www.linkedin.com/in/rakshit-kumar-a8b11914b/" target="_blank" rel="noopener noreferrer">Rakshit Kumar</a>
                 </Attribution>
               )}
             </motion.div>
