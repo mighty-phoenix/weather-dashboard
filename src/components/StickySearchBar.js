@@ -175,12 +175,6 @@ const StickySearchBarComponent = ({
     }
   };
   
-  const handleChipTap = (loc, wasDragging) => {
-    // Only trigger if not dragging
-    if (!wasDragging) {
-      handleFeaturedLocationClick(loc);
-    }
-  };
 
   // Custom submit handler to also trigger scrolling
   const handleSubmit = (e) => {
@@ -330,14 +324,13 @@ const StickySearchBarComponent = ({
             type="submit"
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.9, transition: { duration: 0.1 } }}
-            onTap={() => handleSubmit()}
+            onClick={handleSubmit}
           >
             <BiSearchAlt />
           </SearchButton>
           <LocationButton 
             type="button" 
             onClick={getCurrentLocation}
-            onTap={getCurrentLocation}
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.9, transition: { duration: 0.1 } }}
           >
@@ -378,7 +371,6 @@ const StickySearchBarComponent = ({
                 y: 0,
                 transition: { duration: 0.1 }
               }}
-              onTap={() => handleChipTap(loc, isDragging)}
               onTapStart={(e) => {
                 e.stopPropagation();
               }}

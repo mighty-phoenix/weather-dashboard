@@ -7,7 +7,6 @@ import AdditionalInfo from './components/AdditionalInfo';
 import HourlyForecast from './components/HourlyForecast';
 import WeatherBackground from './components/WeatherBackground';
 import Forecast from './components/Forecast';
-import { BsChevronDown } from 'react-icons/bs';
 import {
   AppContainer,
   WeatherDashboard,
@@ -18,7 +17,6 @@ import {
   Attribution
 } from './styles/AppStyles';
 import { HourlyForecastWrapper } from './styles/ForecastStyles';
-import { ScrollIndicator } from './styles/SearchStyles';
 import { GlobalTypography } from './styles/TypographyStyles';
 import {
   getTextColor
@@ -53,7 +51,6 @@ function App() {
   const [searchFocused, setSearchFocused] = useState(false);
   const [lastUpdated, setLastUpdated] = useState(null);
   const weatherDashboardRef = useRef(null);
-  const [showScrollIndicator, setShowScrollIndicator] = useState(false);
 
   // Function to scroll to weather dashboard
   const scrollToWeatherDashboard = () => {
@@ -110,20 +107,6 @@ function App() {
     setIsDay(timeInMinutes >= sunriseInMinutes && timeInMinutes < sunsetInMinutes);
   }, [weatherData, currentTime]);
 
-  // Add effect to scroll to dashboard when weather data changes
-  useEffect(() => {
-    if (weatherData && !loading) {
-      // Show scroll indicator
-      setShowScrollIndicator(true);
-      
-      // Auto-hide scroll indicator after 5 seconds
-      const hideTimer = setTimeout(() => {
-        setShowScrollIndicator(false);
-      }, 5000);
-      
-      return () => clearTimeout(hideTimer);
-    }
-  }, [weatherData, loading]);
 
   const toggleForecast = (index) => {
     setExpandedForecast(expandedForecast === index ? null : index);

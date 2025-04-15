@@ -49,8 +49,20 @@ const PortalTooltip = ({ show, content, anchorEl, onMouseEnter, onMouseLeave }) 
   useEffect(() => {
     if (show && anchorEl.current) {
       const rect = anchorEl.current.getBoundingClientRect();
-      const top = rect.top - 10;
-      const left = Math.min(rect.left - 220, window.innerWidth - 260);
+      
+      // Adjust positioning for mobile
+      const isMobile = window.innerWidth <= 768;
+      let top, left;
+      
+      if (isMobile) {
+        // Center tooltip under the anchor element on mobile
+        top = rect.bottom + 10;
+        left = window.innerWidth / 2 - 125; // Half the tooltip width (250px)
+      } else {
+        // Desktop positioning
+        top = rect.top - 10;
+        left = Math.min(rect.left - 220, window.innerWidth - 260);
+      }
       
       setPosition({
         top: Math.max(top, 10),
@@ -92,7 +104,7 @@ const PortalTooltip = ({ show, content, anchorEl, onMouseEnter, onMouseLeave }) 
         transition: 'opacity 0.15s ease-in-out',
         transform: 'translateY(-5px)'
       }}
-      onMouseEnter={handleMouseEnter}
+      onClick={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
     >
       {content}
@@ -119,10 +131,6 @@ const Forecast = ({
   }
 
   const handleTooltipShow = (tooltipId) => {
-    if (tooltipTimeoutRef.current) {
-      clearTimeout(tooltipTimeoutRef.current);
-      tooltipTimeoutRef.current = null;
-    }
     setShowTooltip(tooltipId);
   };
 
@@ -130,6 +138,14 @@ const Forecast = ({
     tooltipTimeoutRef.current = setTimeout(() => {
       setShowTooltip(null);
     }, 300); // 300ms delay before hiding
+  };
+
+  const handleTooltipToggle = (tooltipId) => {
+    if (showTooltip === tooltipId) {
+      setShowTooltip(null);
+    } else {
+      setShowTooltip(tooltipId);
+    }
   };
 
   const conditionsTooltipContent = (
@@ -353,8 +369,7 @@ const Forecast = ({
                           <h5>Other Conditions</h5>
                           <InfoIcon 
                             ref={infoIconRef}
-                            onMouseEnter={() => handleTooltipShow('conditions')}
-                            onMouseLeave={handleTooltipHide}
+                            onTouchStart={() => handleTooltipToggle('conditions')}
                           >
                             <FiInfo />
                           </InfoIcon>

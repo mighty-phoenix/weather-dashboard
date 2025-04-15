@@ -97,9 +97,8 @@ const PortalTooltip = ({ show, content, anchorEl, onMouseEnter, onMouseLeave }) 
         pointerEvents: 'auto',
         opacity: show ? 1 : 0,
         transition: 'opacity 0.15s ease-in-out',
-        transform: 'translateY(-5px)'
       }}
-      onMouseEnter={handleMouseEnter}
+      onTouchStart={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
     >
       {content}
@@ -188,8 +187,6 @@ const AdditionalInfo = ({
           <h4>Air Quality</h4>
           <InfoIcon 
             ref={aqiInfoIconRef}
-            onMouseEnter={() => handleTooltipShow('aqi')}
-            onMouseLeave={handleTooltipHide}
             onClick={() => handleTooltipShow('aqi')}
             className="info-icon"
           >
