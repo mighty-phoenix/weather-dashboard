@@ -5,6 +5,9 @@ import axios from 'axios';
 const API_KEY = process.env.REACT_APP_WEATHER_API_KEY || 'YOUR_WEATHERAPI_COM_API_KEY';
 const BASE_URL = 'https://api.weatherapi.com/v1';
 
+// LocalStorage key
+const LOCATION_STORAGE_KEY = 'weather_dashboard_location';
+
 // Add logging helper
 const logWeatherData = (data) => {
   // console.log('Weather API Response:', {
@@ -31,13 +34,24 @@ const logWeatherData = (data) => {
 };
 
 export const useWeather = () => {
+  // Get saved location from localStorage or use default
+  const getSavedLocation = () => {
+    try {
+      const savedLocation = localStorage.getItem(LOCATION_STORAGE_KEY);
+      return savedLocation || 'London';
+    } catch (err) {
+      console.error('Error accessing localStorage:', err);
+      return 'London';
+    }
+  };
+
   const [weatherData, setWeatherData] = useState(null);
-  const [location, setLocation] = useState('London');
+  const [location, setLocation] = useState(getSavedLocation);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [unit, setUnit] = useState('C'); // C for Celsius, F for Fahrenheit
   const [suggestions, setSuggestions] = useState([]);
-  const [inputText, setInputText] = useState('');
+  const [inputText, setInputText] = useState(getSavedLocation);
   const [isSearching, setIsSearching] = useState(false);
   // Add a ref to track initial fetch
   const initialFetchRef = useRef(false);
@@ -110,6 +124,13 @@ export const useWeather = () => {
       setInputText(fullName);
       setSuggestions([]);
       fetchWeatherData(suggestion.url || fullName);
+      
+      // Save to localStorage
+      try {
+        localStorage.setItem(LOCATION_STORAGE_KEY, fullName);
+      } catch (err) {
+        console.error('Error saving to localStorage:', err);
+      }
     }
   };
 
@@ -118,6 +139,13 @@ export const useWeather = () => {
     if (e) e.preventDefault();
     fetchWeatherData(location);
     setSuggestions([]);
+    
+    // Save to localStorage
+    try {
+      localStorage.setItem(LOCATION_STORAGE_KEY, location);
+    } catch (err) {
+      console.error('Error saving to localStorage:', err);
+    }
   };
 
   // Get current location
@@ -168,6 +196,13 @@ export const useWeather = () => {
                 const locationName = region ? `${name}, ${region}` : name;
                 setLocation(locationName);
                 setInputText(locationName);
+                
+                // Save to localStorage
+                try {
+                  localStorage.setItem(LOCATION_STORAGE_KEY, locationName);
+                } catch (err) {
+                  console.error('Error saving to localStorage:', err);
+                }
               }
               
               setError(null);
@@ -237,6 +272,13 @@ export const useWeather = () => {
       setInputText(locationName);
       fetchWeatherData(locationName);
       setSuggestions([]);
+      
+      // Save to localStorage
+      try {
+        localStorage.setItem(LOCATION_STORAGE_KEY, locationName);
+      } catch (err) {
+        console.error('Error saving to localStorage:', err);
+      }
     }
   };
 
