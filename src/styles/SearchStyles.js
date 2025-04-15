@@ -2,6 +2,31 @@ import styled, { keyframes } from 'styled-components';
 import { motion } from 'framer-motion';
 import { FONT_SIZE, LINE_HEIGHT } from './TypographyStyles';
 
+// Define animations
+const dotPulse = keyframes`
+  0% {
+    opacity: 0.4;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.3);
+  }
+  100% {
+    opacity: 0.4;
+    transform: scale(1);
+  }
+`;
+
+const shimmerEffect = keyframes`
+  0% {
+    background-position: -100% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+`;
+
 // Define SearchBarInner first before using it in StickySearchBar
 export const SearchBarInner = styled.div`
   max-width: 1200px;
@@ -117,19 +142,67 @@ export const LocationChip = styled(motion.button)`
   transform-origin: center center;
   touch-action: manipulation;
   scroll-snap-align: start;
+  position: relative;
+  overflow: hidden;
   
   /* Add a threshold for tap events to distinguish from scrolling */
   user-select: none;
   -webkit-user-select: none;
   
+  &::before {
+    content: "";
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    right: -2px;
+    bottom: -2px;
+    background: radial-gradient(circle at center, #9D50BB, #6E48AA);
+    border-radius: 50px;
+    z-index: -1;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+  
+  /* Custom dynamic gradients based on data-colors attribute */
+  &[data-colors] {
+    &::before {
+      background: ${props => {
+        const colors = props['data-colors'];
+        if (colors) {
+          const values = colors.split(',');
+          if (values.length >= 6) {
+            return `linear-gradient(to right, 
+              rgba(${values[0]}, ${values[1]}, ${values[2]}, 1), 
+              rgba(${values[3]}, ${values[4]}, ${values[5]}, 1))`;
+          }
+        }
+        return 'radial-gradient(circle at center, #9D50BB, #6E48AA)';
+      }};
+    }
+  }
+  
   &:hover {
-    background: rgba(255, 255, 255, 0.25);
+    background: rgba(0, 0, 0, 0.3);
+    border-color: transparent;
     transform: translateY(-2px);
+    color: white;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+    
+    &::before {
+      opacity: 0.8;
+      background-size: 200% 100%;
+      animation: ${shimmerEffect} 2s infinite;
+    }
   }
   
   &:active {
-    background: rgba(255, 255, 255, 0.3);
+    background: rgba(0, 0, 0, 0.4);
+    border-color: transparent;
     transform: translateY(0);
+    
+    &::before {
+      opacity: 1;
+    }
   }
   
   svg {
@@ -176,6 +249,24 @@ export const SuggestionsContainer = styled(motion.div)`
   border: 1px solid rgba(255, 255, 255, 0.1);
   max-height: 300px;
   overflow-y: auto;
+  
+  @media (max-width: 768px) {
+    width: 100%;
+    left: 0;
+    right: 0;
+    border-radius: 12px;
+  }
+  
+  @media (max-width: 480px) {
+    width: 100%;
+    left: 0;
+    right: 0;
+    transform: none;
+    border-radius: 10px;
+    max-height: 50vh;
+    position: fixed;
+    top: 73px;
+  }
 `;
 
 export const SuggestionItem = styled(motion.div)`
@@ -207,20 +298,14 @@ export const SuggestionItem = styled(motion.div)`
     transform: scale(1.02);
     box-shadow: 0 0 8px rgba(255, 255, 255, 0.1);
   }
-`;
-
-const dotPulse = keyframes`
-  0% {
-    opacity: 0.4;
-    transform: scale(1);
-  }
-  50% {
-    opacity: 1;
-    transform: scale(1.3);
-  }
-  100% {
-    opacity: 0.4;
-    transform: scale(1);
+  
+  @media (max-width: 480px) {
+    padding: 16px 15px;
+    font-size: ${FONT_SIZE.md};
+    
+    .country {
+      font-size: ${FONT_SIZE.xs};
+    }
   }
 `;
 

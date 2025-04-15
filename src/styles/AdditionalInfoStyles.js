@@ -56,6 +56,16 @@ export const InfoIcon = styled.div`
   position: relative;
   color: rgba(255, 255, 255, 0.7);
   cursor: help;
+  
+  @media (max-width: 768px) {
+    padding: 8px;
+    margin: -8px;
+    
+    &:active {
+      background-color: rgba(255, 255, 255, 0.1);
+      border-radius: 50%;
+    }
+  }
 `;
 
 export const Tooltip = styled.div`
@@ -110,6 +120,36 @@ export const Tooltip = styled.div`
   @media (max-width: 768px) {
     width: 180px;
     padding: 8px;
+    position: fixed;
+    bottom: auto;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    max-width: 80vw;
+    z-index: 1100;
+    
+    &:before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: -1;
+    }
+    
+    &.tooltip-left, &.tooltip-right {
+      left: 50%;
+      right: auto;
+      transform: translate(-50%, -50%);
+      
+      &:after {
+        left: 50%;
+        right: auto;
+        transform: translateX(-50%);
+      }
+    }
   }
 `;
 

@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useEffect, useRef, useState } from 'react';
+import ReactDOM from 'react-dom';
 import { FiInfo } from 'react-icons/fi';
 import { WiSunrise, WiSunset } from 'react-icons/wi';
 import MoonPhase from './MoonPhase';
@@ -40,6 +41,73 @@ import {
   DetailValue
 } from '../styles/AdditionalInfoStyles';
 
+// Portal tooltip component that renders directly to document body
+const PortalTooltip = ({ show, content, anchorEl, onMouseEnter, onMouseLeave }) => {
+  const [position, setPosition] = useState({ top: 0, left: 0 });
+  const [isVisible, setIsVisible] = useState(false);
+  const tooltipRef = useRef(null);
+  
+  useEffect(() => {
+    if (show) {
+      setIsVisible(true);
+    }
+  }, [show]);
+  
+  useEffect(() => {
+    if (show && anchorEl.current) {
+      const rect = anchorEl.current.getBoundingClientRect();
+      const top = rect.top - 10;
+      const left = Math.min(rect.left - 220, window.innerWidth - 260);
+      
+      setPosition({
+        top: Math.max(top, 10),
+        left: Math.max(left, 10)
+      });
+    }
+  }, [show, anchorEl]);
+  
+  if (!isVisible) return null;
+  
+  const handleMouseEnter = () => {
+    setIsVisible(true);
+    if (onMouseEnter) onMouseEnter();
+  };
+  
+  const handleMouseLeave = () => {
+    if (!show) setIsVisible(false);
+    if (onMouseLeave) onMouseLeave();
+  };
+  
+  return ReactDOM.createPortal(
+    <div 
+      ref={tooltipRef}
+      style={{
+        position: 'fixed',
+        top: `${position.top}px`,
+        left: `${position.left}px`,
+        background: 'rgba(0, 0, 0, 0.9)',
+        padding: '12px',
+        borderRadius: '8px',
+        color: 'white',
+        zIndex: 9999,
+        width: '250px',
+        boxShadow: '0 4px 15px rgba(0, 0, 0, 0.5)',
+        fontSize: '0.75rem',
+        lineHeight: 1.4,
+        pointerEvents: 'auto',
+        opacity: show ? 1 : 0,
+        transition: 'opacity 0.15s ease-in-out',
+        transform: 'translateY(-5px)'
+      }}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
+    >
+      {content}
+    </div>,
+    document.body
+  );
+};
+
 const AdditionalInfo = ({
   weatherData,
   unit,
@@ -47,6 +115,55 @@ const AdditionalInfo = ({
   setShowTooltip,
   getTemperature
 }) => {
+  // References for tooltip positioning
+  const aqiInfoIconRef = useRef(null);
+  const tooltipTimeoutRef = useRef(null);
+
+  // Handle dismissing tooltips when clicking outside on mobile
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      // Only run this on mobile devices
+      if (window.innerWidth <= 768 && showTooltip) {
+        // Check if the click was on a tooltip or info icon
+        if (!e.target.closest('.tooltip') && !e.target.closest('.info-icon')) {
+          setShowTooltip(null);
+        }
+      }
+    };
+
+    document.addEventListener('click', handleClickOutside);
+    return () => document.removeEventListener('click', handleClickOutside);
+  }, [showTooltip, setShowTooltip]);
+
+  const handleTooltipShow = (tooltipId) => {
+    if (tooltipTimeoutRef.current) {
+      clearTimeout(tooltipTimeoutRef.current);
+      tooltipTimeoutRef.current = null;
+    }
+    setShowTooltip(tooltipId);
+  };
+
+  const handleTooltipHide = () => {
+    tooltipTimeoutRef.current = setTimeout(() => {
+      setShowTooltip(null);
+    }, 300); // 300ms delay before hiding
+  };
+
+  // AQI tooltip content
+  const aqiTooltipContent = (
+    <>
+      <TooltipTitle>US EPA Air Quality Index</TooltipTitle>
+      <TooltipContent>
+        <TooltipItem>Good (0-50)</TooltipItem>
+        <TooltipItem>Moderate (51-100)</TooltipItem>
+        <TooltipItem>Unhealthy for Sensitive Groups (101-150)</TooltipItem>
+        <TooltipItem>Unhealthy (151-200)</TooltipItem>
+        <TooltipItem>Very Unhealthy (201-300)</TooltipItem>
+        <TooltipItem>Hazardous (301+)</TooltipItem>
+      </TooltipContent>
+    </>
+  );
+
   // Guard clause to prevent errors when weatherData or forecast data is not available
   if (!weatherData || !weatherData.forecast || !weatherData.forecast.forecastday) {
     return null;
@@ -70,23 +187,13 @@ const AdditionalInfo = ({
         <InfoHeader>
           <h4>Air Quality</h4>
           <InfoIcon 
-            onMouseEnter={() => setShowTooltip('aqi')}
-            onMouseLeave={() => setShowTooltip(null)}
+            ref={aqiInfoIconRef}
+            onMouseEnter={() => handleTooltipShow('aqi')}
+            onMouseLeave={handleTooltipHide}
+            onClick={() => handleTooltipShow('aqi')}
+            className="info-icon"
           >
             <FiInfo />
-            {showTooltip === 'aqi' && (
-              <Tooltip>
-                <TooltipTitle>US EPA Air Quality Index</TooltipTitle>
-                <TooltipContent>
-                  <TooltipItem>Good (0-50)</TooltipItem>
-                  <TooltipItem>Moderate (51-100)</TooltipItem>
-                  <TooltipItem>Unhealthy for Sensitive Groups (101-150)</TooltipItem>
-                  <TooltipItem>Unhealthy (151-200)</TooltipItem>
-                  <TooltipItem>Very Unhealthy (201-300)</TooltipItem>
-                  <TooltipItem>Hazardous (301+)</TooltipItem>
-                </TooltipContent>
-              </Tooltip>
-            )}
           </InfoIcon>
         </InfoHeader>
         
@@ -107,8 +214,8 @@ const AdditionalInfo = ({
           <AQIPollutant 
             onMouseEnter={() => setShowTooltip('pm2_5')}
             onMouseLeave={() => setShowTooltip(null)}
-            onClick={() => setShowTooltip(showTooltip === 'pm2_5' ? null : 'pm2_5')}
-            className="pollutant-left"
+            onClick={() => setShowTooltip('pm2_5')}
+            className="pollutant-left info-icon"
           >
             <PollutantName>PM2.5</PollutantName>
             <PollutantValue level={getPollutantLevel(weatherData.current.air_quality?.pm2_5 || 0, 'pm2_5')}>
@@ -119,7 +226,7 @@ const AdditionalInfo = ({
               {getPollutantEmoji(getPollutantLevel(weatherData.current.air_quality?.pm2_5 || 0, 'pm2_5'))}
             </PollutantValue>
             {showTooltip === 'pm2_5' && (
-              <Tooltip className="tooltip-left">
+              <Tooltip className="tooltip tooltip-left">
                 {getPollutantInfo('pm2_5')}
               </Tooltip>
             )}
@@ -128,8 +235,8 @@ const AdditionalInfo = ({
           <AQIPollutant
             onMouseEnter={() => setShowTooltip('pm10')}
             onMouseLeave={() => setShowTooltip(null)}
-            onClick={() => setShowTooltip(showTooltip === 'pm10' ? null : 'pm10')}
-            className="pollutant-center"
+            onClick={() => setShowTooltip('pm10')}
+            className="pollutant-center info-icon"
           >
             <PollutantName>PM10</PollutantName>
             <PollutantValue level={getPollutantLevel(weatherData.current.air_quality?.pm10 || 0, 'pm10')}>
@@ -140,7 +247,7 @@ const AdditionalInfo = ({
               {getPollutantEmoji(getPollutantLevel(weatherData.current.air_quality?.pm10 || 0, 'pm10'))}
             </PollutantValue>
             {showTooltip === 'pm10' && (
-              <Tooltip>
+              <Tooltip className="tooltip">
                 {getPollutantInfo('pm10')}
               </Tooltip>
             )}
@@ -149,8 +256,8 @@ const AdditionalInfo = ({
           <AQIPollutant
             onMouseEnter={() => setShowTooltip('o3')}
             onMouseLeave={() => setShowTooltip(null)}
-            onClick={() => setShowTooltip(showTooltip === 'o3' ? null : 'o3')}
-            className="pollutant-right"
+            onClick={() => setShowTooltip('o3')}
+            className="pollutant-right info-icon"
           >
             <PollutantName>O₃</PollutantName>
             <PollutantValue level={getPollutantLevel(weatherData.current.air_quality?.o3 || 0, 'o3')}>
@@ -161,7 +268,7 @@ const AdditionalInfo = ({
               {getPollutantEmoji(getPollutantLevel(weatherData.current.air_quality?.o3 || 0, 'o3'))}
             </PollutantValue>
             {showTooltip === 'o3' && (
-              <Tooltip className="tooltip-right">
+              <Tooltip className="tooltip tooltip-right">
                 {getPollutantInfo('o3')}
               </Tooltip>
             )}
@@ -226,6 +333,15 @@ const AdditionalInfo = ({
           </DetailValue>
         </DetailRow>
       </InfoCard>
+
+      {/* Portal Tooltip for AQI */}
+      <PortalTooltip 
+        show={showTooltip === 'aqi'} 
+        content={aqiTooltipContent}
+        anchorEl={aqiInfoIconRef}
+        onMouseEnter={() => handleTooltipShow('aqi')}
+        onMouseLeave={handleTooltipHide}
+      />
     </StyledAdditionalInfo>
   );
 };

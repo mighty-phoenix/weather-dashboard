@@ -17,30 +17,39 @@ import {
 const featuredLocations = [
   { 
     name: "Antillanca",
+    colors: "20, 176, 236, 87, 97, 235" // blue-purple
   },
   { 
     name: "Zermatt",
+    colors: "31, 162, 255, 18, 216, 250" // light blue-aqua
   },
   { 
     name: "London", 
+    colors: "111, 123, 247, 48, 213, 238" // indigo-teal
   },
   { 
     name: "New York", 
+    colors: "245, 87, 108, 255, 136, 136" // pink-red
   },
   { 
     name: "Sydney", 
+    colors: "255, 93, 177, 239, 1, 124" // pink-magenta
   },
   { 
     name: "Dubai", 
+    colors: "243, 150, 154, 255, 201, 115" // coral-amber
   },
   {   
     name: "Rio de Janeiro", 
+    colors: "82, 194, 52, 161, 226, 139" // green shades
   },
   { 
     name: "Oslo", 
+    colors: "71, 118, 230, 142, 84, 233" // blue-purple
   },
   { 
     name: "Singapore", 
+    colors: "255, 126, 95, 254, 180, 123" // orange shades
   }
 ];
 
@@ -298,9 +307,9 @@ const StickySearchBarComponent = ({
           <LocationButton 
             type="button" 
             onClick={getCurrentLocation}
+            onTap={getCurrentLocation}
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.9, transition: { duration: 0.1 } }}
-            onTap={getCurrentLocation}
           >
             <BiCurrentLocation />
           </LocationButton>
@@ -359,6 +368,7 @@ const StickySearchBarComponent = ({
                 }
               }}
               className="location-chip shimmer"
+              data-colors={loc.colors}
             >
               {loc.name}
             </LocationChip>

@@ -49,23 +49,25 @@ export const WeatherDashboard = styled.div`
 export const SearchContainer = styled.form`
   display: flex;
   margin-bottom: 0;
-  gap: 10px;
+  gap: 14px;
   position: relative;
   align-items: center;
   flex-wrap: wrap;
   width: 100%;
+  padding: 6px 0;
   
   @media (max-width: 480px) {
     flex-direction: row;
     align-items: center;
-    gap: 8px;
+    gap: 6px;
+    padding: 4px 0;
   }
 `;
 
 export const SearchInput = styled.input`
   flex: 1;
   width: 100%;
-  padding: 15px 20px;
+  padding: 15px 24px;
   border: none;
   border-radius: 50px;
   font-size: ${FONT_SIZE.base};
@@ -73,25 +75,39 @@ export const SearchInput = styled.input`
   color: #fff;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
   transition: all 0.3s ease;
+  position: relative;
+  z-index: 1;
+  letter-spacing: 0.5px;
+  text-indent: 2px;
 
   &:focus {
     outline: none;
     background: rgba(0, 0, 0, 0.4);
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.35);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.35), 
+                0 0 0 2px rgba(255, 255, 255, 0.1),
+                0 0 0 1px rgba(0, 255, 163, 0.2),
+                0 0 0 4px rgba(220, 31, 255, 0.1);
+    letter-spacing: 0.6px;
   }
 
   &::placeholder {
     color: rgba(255, 255, 255, 0.7);
+    letter-spacing: 0.5px;
   }
   
   &.focused {
     transform: scale(1.02);
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4), 
+                0 0 0 2px rgba(255, 255, 255, 0.1),
+                0 0 0 1px rgba(0, 255, 163, 0.2),
+                0 0 0 4px rgba(220, 31, 255, 0.1);
   }
   
   @media (max-width: 480px) {
     width: 100%;
-    min-width: 120px;
+    min-width: 160px;
+    flex: 1 0 auto;
+    padding: 15px 18px;
   }
 `;
 
@@ -113,15 +129,35 @@ export const SearchButton = styled(motion.button)`
   position: relative;
   z-index: 1;
   touch-action: manipulation;
+  margin: 0 2px;
+  
+  &::before {
+    content: "";
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    right: -2px;
+    bottom: -2px;
+    background: radial-gradient(circle at top right, #00FFA3, #DC1FFF);
+    border-radius: 50%;
+    z-index: -1;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
   
   &:hover {
-    background: rgba(255, 255, 255, 0.3);
+    background: rgba(0, 0, 0, 0.5);
+    
+    &::before {
+      opacity: 1;
+    }
   }
   
   @media (max-width: 480px) {
     width: 40px;
     height: 40px;
     flex-shrink: 0;
+    margin: 0;
   }
 `;
 
@@ -142,15 +178,35 @@ export const LocationButton = styled(motion.button)`
   position: relative;
   z-index: 1;
   touch-action: manipulation;
+  margin: 0 2px;
+  
+  &::before {
+    content: "";
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    right: -2px;
+    bottom: -2px;
+    background: radial-gradient(circle at bottom left, #36D1DC, #5B86E5);
+    border-radius: 50%;
+    z-index: -1;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
   
   &:hover {
-    background: rgba(255, 255, 255, 0.3);
+    background: rgba(0, 0, 0, 0.5);
+    
+    &::before {
+      opacity: 1;
+    }
   }
   
   @media (max-width: 480px) {
     width: 40px;
     height: 40px;
     flex-shrink: 0;
+    margin: 0;
   }
 `;
 
@@ -158,10 +214,10 @@ export const UnitToggle = styled(motion.button)`
   background: rgba(0, 0, 0, 0.3);
   border: none;
   border-radius: 50px;
-  padding: 8px 16px;
+  padding: 8px 18px;
   display: flex;
   align-items: center;
-  gap: 5px;
+  gap: 7px;
   font-size: ${FONT_SIZE.base};
   color: #fff;
   cursor: pointer;
@@ -172,16 +228,38 @@ export const UnitToggle = styled(motion.button)`
   position: relative;
   z-index: 1;
   touch-action: manipulation;
+  letter-spacing: 0.5px;
+  margin: 0 2px;
+  
+  &::before {
+    content: "";
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    right: -2px;
+    bottom: -2px;
+    background: radial-gradient(ellipse at top, #FF512F, #DD2476);
+    border-radius: 50px;
+    z-index: -1;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
   
   &:hover {
-    background: rgba(255, 255, 255, 0.3);
+    background: rgba(0, 0, 0, 0.5);
+    
+    &::before {
+      opacity: 1;
+    }
   }
   
   @media (max-width: 480px) {
     height: 40px;
-    padding: 4px 12px;
+    padding: 4px 10px;
     font-size: ${FONT_SIZE.sm};
     flex-shrink: 0;
+    margin: 0;
+    gap: 4px;
   }
 `;
 
