@@ -1,3 +1,21 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Poppins', sans-serif;
+  color: #fff;
+  overflow-x: hidden;
+}
+
+:root {
+  --transition-speed: 0.3s;
+}
+
 .App {
   text-align: center;
 }
@@ -34,5 +52,233 @@
   }
   to {
     transform: rotate(360deg);
+  }
+}
+
+/* Custom scrollbar styles */
+/* For Webkit browsers (Chrome, Safari, Edge) */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(to bottom, #00d4ff, #00a2ff);
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  box-shadow: 0 0 5px rgba(0, 196, 255, 0.3);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(to bottom, #00a2ff, #0080ff);
+  box-shadow: 0 0 8px rgba(0, 196, 255, 0.5);
+}
+
+::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
+/* For Firefox */
+* {
+  scrollbar-width: auto;
+  scrollbar-color: #00a2ff rgba(0, 0, 0, 0.1);
+}
+
+/* Hide scrollbar for Chrome/Safari/Edge when not in use but keep functionality */
+.hide-scrollbar::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+}
+
+.hide-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Show scrollbar on hover for elements with hide-scrollbar class */
+.hide-scrollbar:hover::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.hide-scrollbar:hover {
+  scrollbar-width: auto;
+}
+
+/* Animation keyframes */
+@keyframes float {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+  100% { transform: translateY(0px); }
+}
+
+@keyframes pulse {
+  0% { transform: scale(1); opacity: 0.8; }
+  50% { transform: scale(1.05); opacity: 1; }
+  100% { transform: scale(1); opacity: 0.8; }
+}
+
+@keyframes heartbeat {
+  0% { transform: scale(1); }
+  14% { transform: scale(1.1); }
+  28% { transform: scale(1); }
+  42% { transform: scale(1.15); }
+  70% { transform: scale(1); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from { transform: translateY(20px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+/* New animations for sticky top bar */
+@keyframes fadeInDown {
+  from { 
+    opacity: 0; 
+    transform: translateY(-30px);
+  }
+  to { 
+    opacity: 1; 
+    transform: translateY(0);
+  }
+}
+
+@keyframes sparkle {
+  0% { filter: brightness(1); }
+  25% { filter: brightness(1.2); }
+  50% { filter: brightness(1); }
+  75% { filter: brightness(1.1); }
+  100% { filter: brightness(1); }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+@keyframes popIn {
+  0% {
+    opacity: 0;
+    transform: scale(1.2);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Adding a consistent card hover effect */
+@keyframes cardHoverEffect {
+  0% {
+    transform: translateY(0) scale(1);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  }
+  100% {
+    transform: translateY(-5px) scale(1.03);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+  }
+}
+
+/* 3D expand effect for forecast panels */
+@keyframes expandPanel {
+  0% {
+    transform: perspective(800px) rotateX(-2deg) scale(0.98);
+    opacity: 0;
+  }
+  100% {
+    transform: perspective(800px) rotateX(0) scale(1);
+    opacity: 1;
+  }
+}
+
+/* Glass effect classes */
+.glass {
+  background: rgba(0, 0, 0, 0.35);
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
+  border-radius: 24px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.glass-dark {
+  background: rgba(0, 0, 0, 0.35);
+  border-radius: 24px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Input focus effect */
+input:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.3);
+  transform: scale(1.03);
+  transition: all 0.2s ease-out;
+}
+
+/* Shimmer effect for location chips */
+.shimmer {
+  background: linear-gradient(
+    to right,
+    rgba(255, 255, 255, 0.1) 0%,
+    rgba(255, 255, 255, 0.2) 50%,
+    rgba(255, 255, 255, 0.1) 100%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 3s infinite;
+  border-radius: 50px;
+}
+
+/* Improved animations for location chips */
+.location-chip {
+  transition: all 0.3s ease;
+  animation: 0.5s popIn ease-out;
+}
+
+.location-chip:hover {
+  animation: sparkle 2s infinite;
+  transform: translateY(-3px);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+/* Enhanced mobile touch handling */
+@media (max-width: 767px) {
+  .location-chip, 
+  button {
+    -webkit-tap-highlight-color: transparent; /* Remove default mobile highlight */
+    touch-action: manipulation; /* Improve touch behavior */
+  }
+  
+  /* Disable hover effects on mobile that can interfere with touch */
+  .location-chip:hover {
+    animation: none;
+    transform: none;
+  }
+  
+  /* Prevent accidental taps when scrolling horizontally */
+  .FeaturedLocations {
+    touch-action: pan-x; /* Allow horizontal panning/scrolling */
+    -ms-touch-action: pan-x;
+    user-select: none; /* Prevent text selection during scroll */
+  }
+  
+  /* Fix for iOS scroll behavior */
+  html, body {
+    touch-action: manipulation;
+    -webkit-overflow-scrolling: touch;
   }
 }

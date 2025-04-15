@@ -1,70 +1,128 @@
-# Getting Started with Create React App
+# Weather Dashboard
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+A beautiful, modern weather dashboard built with React, featuring real-time weather data, location search, hourly and daily forecasts, and animated weather icons.
 
-## Available Scripts
+![Weather Dashboard Screenshot](screenshot.png)
 
-In the project directory, you can run:
+## Features
 
-### `npm start`
+- 🌤️ Real-time weather data from WeatherAPI.com
+- 🔍 Location search with autocomplete
+- 📍 Current location detection
+- 📱 Responsive design that works on all devices
+- 🌡️ Temperature unit toggle (Celsius/Fahrenheit)
+- 📊 5-day weather forecast
+- ⏱️ Hourly forecast with beautiful UI
+- 🎭 Animated weather icons based on conditions
+- 💨 Wind, humidity, and "feels like" temperature data
+- 🌅 Sunrise and sunset times
+- 🌈 Air quality index (AQI)
+- ☀️ UV index with color indicators
+- ✨ Sleek glass-morphism design with modern UI
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+## Getting Started
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+### Prerequisites
 
-### `npm test`
+- Node.js (version 14.x or higher)
+- npm or yarn
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+### Installation
 
-### `npm run build`
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/yourusername/weather-dashboard.git
+   cd weather-dashboard
+   ```
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+3. Get an API key from [WeatherAPI.com](https://www.weatherapi.com/)
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+4. Create a `.env` file in the root directory and add your API key:
+   ```
+   REACT_APP_WEATHER_API_KEY=your_api_key_here
+   ```
 
-### `npm run eject`
+5. Update the API key in `src/hooks/useWeather.js`:
+   ```javascript
+   const API_KEY = process.env.REACT_APP_WEATHER_API_KEY;
+   ```
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+6. Start the development server:
+   ```bash
+   npm start
+   ```
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+## Usage
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+- **Search for a location**: Enter a city name, ZIP code, or coordinates in the search box
+- **Use current location**: Click the location icon to use your current location
+- **Switch temperature units**: Click the temperature unit toggle (°C/°F)
+- **View hourly forecast**: Scroll horizontally through the hourly forecast section
+- **View daily forecast**: Check the 5-day forecast at the bottom
+- **Check weather details**: View additional details like humidity, wind speed, feels like temperature
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+## Customization
 
-## Learn More
+You can customize the dashboard by modifying the styled components in each file. The main styling is done using styled-components.
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+### Change the background gradient
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+In `src/App.js`, find the `AppContainer` styled component and modify the background property:
 
-### Code Splitting
+```javascript
+const AppContainer = styled.div`
+  background: linear-gradient(135deg, #6e8efb, #a777e3); // Change these colors
+  // ...
+`;
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+### Change the dashboard theme
 
-### Analyzing the Bundle Size
+You can modify the dashboard's theme by changing the background opacity and colors in the `WeatherDashboard` styled component:
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+```javascript
+const WeatherDashboard = styled.div`
+  background: rgba(255, 255, 255, 0.2); // Change opacity or color
+  // ...
+`;
+```
 
-### Making a Progressive Web App
+## Architecture
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+The project uses the following architecture:
 
-### Advanced Configuration
+- `src/App.js`: Main component that renders the dashboard
+- `src/components/`: Reusable UI components
+- `src/hooks/`: Custom React hooks, including the `useWeather` hook for API calls
+- `src/styles/`: Global styles and theme
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+## Technologies Used
 
-### Deployment
+- React.js
+- styled-components for styling
+- framer-motion for animations
+- axios for API requests
+- react-icons for weather icons
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+## Contributing
 
-### `npm run build` fails to minify
+Contributions are welcome! Please feel free to submit a Pull Request.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+## License
+
+This project is licensed under the MIT License - see the LICENSE file for details.
+
+## Acknowledgements
+
+- [WeatherAPI.com](https://www.weatherapi.com/) for providing the weather data
+- [React Icons](https://react-icons.github.io/react-icons/) for the weather icons
+- [Framer Motion](https://www.framer.com/motion/) for the animations
+
+## Contact
+
+If you have any questions or suggestions, please open an issue or contact [your-email@example.com].
