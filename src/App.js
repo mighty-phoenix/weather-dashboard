@@ -165,30 +165,6 @@ function App() {
         getTemperature={getTemperature}
       />
       
-      {/* Scroll Indicator */}
-      <AnimatePresence>
-        {showScrollIndicator && weatherData && !loading && (
-          <ScrollIndicator
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ 
-              opacity: 1, 
-              y: 0,
-              transition: { 
-                type: "spring",
-                stiffness: 400,
-                damping: 25
-              }
-            }}
-            exit={{ opacity: 0, y: 20 }}
-            whileHover={{ y: -3 }}
-            whileTap={{ y: 0 }}
-            onClick={scrollToWeatherDashboard}
-          >
-            <BsChevronDown />
-          </ScrollIndicator>
-        )}
-      </AnimatePresence>
-      
       {/* Main Weather Dashboard Container */}
       <WeatherDashboard ref={weatherDashboardRef} className="weather-dashboard glass">
         <AnimatePresence mode="wait">

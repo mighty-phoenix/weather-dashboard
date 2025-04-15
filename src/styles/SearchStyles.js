@@ -349,9 +349,9 @@ export const LoadingDots = styled.div`
 
 export const ScrollIndicator = styled(motion.div)`
   position: fixed;
-  bottom: 20px;
+  top: 50%;
   left: 50%;
-  transform: translateX(-50%);
+  transform: translate(-50%, -50%);
   width: 40px;
   height: 40px;
   background: rgba(255, 255, 255, 0.2);
