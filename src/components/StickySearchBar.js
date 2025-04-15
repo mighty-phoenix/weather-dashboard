@@ -45,8 +45,6 @@ const featuredLocations = [
 ];
 
 const StickySearchBarComponent = ({ 
-  location, 
-  setLocation,
   inputText,
   handleInputChange,
   suggestions,
@@ -135,6 +133,7 @@ const StickySearchBarComponent = ({
     }
   };
 
+  // Format the current time
 
   // Handle featured location selection
   const handleFeaturedLocationClick = (location) => {
@@ -314,10 +313,6 @@ const StickySearchBarComponent = ({
             }}
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95, transition: { duration: 0.1 } }}
-            onTap={(e) => {
-              e.stopPropagation();
-              toggleUnit();
-            }}
           >
             {unit === 'C' ? <RiTempColdLine /> : <RiTempHotLine />}
             °{unit}
