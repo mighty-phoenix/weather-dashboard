@@ -2,7 +2,7 @@ import React, { useEffect, useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 // Import background components
-import { BackgroundContainer, GradientOverlay } from './styles';
+import { BackgroundContainer, GradientOverlay, Sun, Moon } from './styles';
 import useBackgroundEffects from './hooks/useBackgroundEffects';
 import ClearSky from './elements/ClearSky';
 import CloudsComponent from './elements/Clouds';
@@ -14,6 +14,7 @@ import FogComponent from './elements/Fog';
 const WeatherBackground = ({ weatherData, isDay }) => {
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
   const [weatherCode, setWeatherCode] = useState(1000);
+  const [prevWeatherCode, setPrevWeatherCode] = useState(null);
   
   // Add resize listener to update mobile detection
   useEffect(() => {
@@ -25,9 +26,10 @@ const WeatherBackground = ({ weatherData, isDay }) => {
   // Update weather code whenever weather data changes
   useEffect(() => {
     if (weatherData && weatherData.current && weatherData.current.condition) {
+      setPrevWeatherCode(weatherCode);
       setWeatherCode(weatherData.current.condition.code);
     }
-  }, [weatherData]);
+  }, [weatherData, weatherCode]);
 
   // Use custom hook for background calculations
   const { 
@@ -38,6 +40,46 @@ const WeatherBackground = ({ weatherData, isDay }) => {
     cloudComponents
   } = useBackgroundEffects(weatherData, isDay, weatherCode, isMobile);
   
+  // Get friendly weather type for animation keys
+  const getWeatherType = (code) => {
+    // Clear sky
+    if (code === 1000) return 'clear';
+    
+    // Clouds (partly cloudy, cloudy, overcast)
+    if (code >= 1003 && code <= 1009) return 'cloudy';
+    
+    // Mist, fog, freezing fog
+    if ([1030, 1135, 1147].includes(code)) return 'fog';
+    
+    // Rain conditions
+    if ((code >= 1063 && code <= 1072) || 
+        (code >= 1150 && code <= 1201) ||
+        (code >= 1240 && code <= 1246)) return 'rain';
+    
+    // Thunderstorm conditions
+    if (code === 1087 || 
+        (code >= 1273 && code <= 1282)) return 'thunder';
+    
+    // Snow, ice, sleet conditions
+    if ((code >= 1066 && code <= 1069) ||
+        (code >= 1114 && code <= 1117) ||
+        (code >= 1204 && code <= 1237) || 
+        (code >= 1249 && code <= 1264)) return 'snow';
+    
+    // Default
+    return 'unknown';
+  };
+  
+  // Track weather transitions for smoother animation
+  const weatherType = useMemo(() => getWeatherType(weatherCode), [weatherCode]);
+  const prevWeatherType = useMemo(() => prevWeatherCode ? getWeatherType(prevWeatherCode) : null, [prevWeatherCode]);
+  
+  // Determine if sun/moon should be visible based on weather condition
+  const shouldShowCelestialBodies = useMemo(() => {
+    // Show sun/moon for clear sky and partly cloudy
+    return weatherCode === 1000 || weatherCode === 1003;
+  }, [weatherCode]);
+
   // Render weather-specific elements
   const renderWeatherElements = useMemo(() => {
     if (!weatherData) return null;
@@ -47,18 +89,26 @@ const WeatherBackground = ({ weatherData, isDay }) => {
       return <ClearSky isDay={isDay} sunPosition={sunPosition} moonPosition={moonPosition} />;
     }
     
-    // Clouds
-    if (weatherCode >= 1003 && weatherCode <= 1030) {
+    // Clouds (partly cloudy, cloudy, overcast)
+    if (weatherCode >= 1003 && weatherCode <= 1009) {
       return <CloudsComponent 
         cloudComponents={cloudComponents} 
         isDay={isDay} 
         sunPosition={sunPosition} 
         moonPosition={moonPosition} 
+        weatherCode={weatherCode}
       />;
     }
     
-    // Rain
-    if ((weatherCode >= 1063 && weatherCode <= 1072) || (weatherCode >= 1150 && weatherCode <= 1201)) {
+    // Mist, fog, freezing fog
+    if (weatherCode === 1030 || weatherCode === 1135 || weatherCode === 1147) {
+      return <FogComponent weatherCode={weatherCode} isDay={isDay} />;
+    }
+    
+    // Rain (all rain types including drizzle, freezing rain, and rain showers)
+    if ((weatherCode >= 1063 && weatherCode <= 1072) || 
+        (weatherCode >= 1150 && weatherCode <= 1201) ||
+        (weatherCode >= 1240 && weatherCode <= 1246)) {
       return <RainComponent 
         cloudComponents={cloudComponents} 
         weatherCode={weatherCode} 
@@ -66,8 +116,9 @@ const WeatherBackground = ({ weatherData, isDay }) => {
       />;
     }
     
-    // Thunderstorm with rain
-    if ((weatherCode >= 1087 && weatherCode <= 1117) || (weatherCode >= 1273 && weatherCode <= 1282)) {
+    // Thunderstorm (all thunder conditions)
+    if (weatherCode === 1087 || 
+        (weatherCode >= 1273 && weatherCode <= 1282)) {
       return <ThunderstormComponent 
         cloudComponents={cloudComponents} 
         weatherCode={weatherCode} 
@@ -75,8 +126,10 @@ const WeatherBackground = ({ weatherData, isDay }) => {
       />;
     }
     
-    // Snow
-    if ((weatherCode >= 1210 && weatherCode <= 1237) || 
+    // Snow (all snow types, ice pellets, sleet)
+    if ((weatherCode >= 1066 && weatherCode <= 1069) ||
+        (weatherCode >= 1114 && weatherCode <= 1117) ||
+        (weatherCode >= 1204 && weatherCode <= 1237) || 
         (weatherCode >= 1249 && weatherCode <= 1264)) {
       return <SnowComponent 
         cloudComponents={cloudComponents} 
@@ -85,22 +138,61 @@ const WeatherBackground = ({ weatherData, isDay }) => {
       />;
     }
     
-    // Fog (default for other conditions)
+    // Default for any other conditions
     return <FogComponent weatherCode={weatherCode} isDay={isDay} />;
   }, [weatherCode, isDay, isMobile, cloudComponents, sunPosition, moonPosition, weatherData]);
+  
+  // Render dual weather elements during transitions if needed
+  const shouldShowDualTransition = useMemo(() => {
+    if (!prevWeatherType || prevWeatherType === weatherType) return false;
+    
+    const significantChange = (
+      // Transitions that benefit from dual animation
+      (prevWeatherType === 'clear' && weatherType === 'rain') ||
+      (prevWeatherType === 'clear' && weatherType === 'snow') ||
+      (prevWeatherType === 'clear' && weatherType === 'thunder') ||
+      (prevWeatherType === 'cloudy' && weatherType === 'rain') ||
+      (prevWeatherType === 'cloudy' && weatherType === 'snow') ||
+      (prevWeatherType === 'rain' && weatherType === 'snow') ||
+      (prevWeatherType === 'rain' && weatherType === 'thunder')
+    );
+    
+    return significantChange;
+  }, [prevWeatherType, weatherType]);
   
   return (
     <BackgroundContainer style={{ background: backgroundGradient }}>
       <GradientOverlay
         style={{ background: overlayGradient }}
       />
+      
+      {/* Add sun/moon for weather types that don't handle them internally */}
+      {!shouldShowCelestialBodies && (
+        <>
+          {isDay && sunPosition > 0 && (
+            <Sun 
+              animate={{ left: '90%', top: '50%' }}
+              transition={{ duration: 1 }}
+              style={{ opacity: 0.5, zIndex: 0 }}
+            />
+          )}
+          {!isDay && moonPosition > 0 && (
+            <Moon 
+              animate={{ left: '90%', top: '50%' }}
+              transition={{ duration: 1 }}
+              style={{ opacity: 0.4, zIndex: 0 }}
+            />
+          )}
+        </>
+      )}
+      
       <AnimatePresence mode="wait" initial={false}>
         <motion.div
-          key={`weather-${weatherCode}-${isDay ? 'day' : 'night'}`}
+          key={`weather-${weatherType}-${isDay ? 'day' : 'night'}`}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          transition={{ duration: 1 }}
+          transition={{ duration: shouldShowDualTransition ? 1.5 : 1 }}
         >
           {renderWeatherElements}
         </motion.div>

@@ -99,84 +99,174 @@ const useBackgroundEffects = (weatherData, isDay, weatherCode, isMobile) => {
     let newColors = [];
     let gradientString = '';
     
-    // Clear sky
-    if (weatherCode === 1000) {
-      if (isDay) {
-        const sunProgress = sunPosition / 100;
-        const color1 = chroma.mix('#4facfe', '#ff9a9e', sunProgress * 0.5, 'lab');
-        const color2 = chroma.mix('#00f2fe', '#fad0c4', sunProgress * 0.5, 'lab');
-        newColors = [color1.hex(), color2.hex()];
-        gradientString = `linear-gradient(${gradientDirection}deg, ${color1.hex()} 0%, ${color2.hex()} 100%)`;
-      } else {
-        const moonProgress = moonPosition / 100;
-        const color1 = chroma.mix('#0c1445', '#30cfd0', moonProgress * 0.3, 'lab');
-        const color2 = chroma.mix('#203a8f', '#330867', moonProgress * 0.3, 'lab');
-        newColors = [color1.hex(), color2.hex()];
-        gradientString = `linear-gradient(${gradientDirection}deg, ${color1.hex()} 0%, ${color2.hex()} 100%)`;
+    const getWeatherGradient = () => {
+      // Clear sky (1000)
+      if (weatherCode === 1000) {
+        if (isDay) {
+          const sunProgress = sunPosition / 100;
+          const color1 = chroma.mix('#4facfe', '#ff9a9e', sunProgress * 0.5, 'lab');
+          const color2 = chroma.mix('#00f2fe', '#fad0c4', sunProgress * 0.5, 'lab');
+          return [color1.hex(), color2.hex()];
+        } else {
+          const moonProgress = moonPosition / 100;
+          const color1 = chroma.mix('#0c1445', '#30cfd0', moonProgress * 0.3, 'lab');
+          const color2 = chroma.mix('#203a8f', '#330867', moonProgress * 0.3, 'lab');
+          return [color1.hex(), color2.hex()];
+        }
       }
-    }
-    
-    // Partly cloudy
-    else if (weatherCode === 1003) {
-      if (isDay) {
-        newColors = ['#5583EE', '#41D8DD'];
-        gradientString = `linear-gradient(${gradientDirection}deg, ${newColors[0]} 0%, ${newColors[1]} 100%)`;
-      } else {
-        newColors = ['#12132e', '#2b4a8f'];
-        gradientString = `linear-gradient(${gradientDirection}deg, ${newColors[0]} 0%, ${newColors[1]} 100%)`;
+      
+      // Partly cloudy (1003)
+      else if (weatherCode === 1003) {
+        if (isDay) {
+          return ['#5583EE', '#41D8DD'];
+        } else {
+          return ['#12132e', '#2b4a8f'];
+        }
       }
-    }
-    
-    // Cloudy
-    else if (weatherCode >= 1006 && weatherCode <= 1030) {
-      if (isDay) {
-        newColors = ['#6a85b6', '#bac8e0'];
-        gradientString = `linear-gradient(${gradientDirection}deg, ${newColors[0]} 0%, ${newColors[1]} 100%)`;
-      } else {
-        newColors = ['#25273c', '#333b5f'];
-        gradientString = `linear-gradient(${gradientDirection}deg, ${newColors[0]} 0%, ${newColors[1]} 100%)`;
+      
+      // Cloudy (1006-1009)
+      else if (weatherCode >= 1006 && weatherCode <= 1009) {
+        if (isDay) {
+          return ['#6a85b6', '#bac8e0'];
+        } else {
+          return ['#25273c', '#333b5f'];
+        }
       }
-    }
-    
-    // Rain
-    else if ((weatherCode >= 1063 && weatherCode <= 1072) || (weatherCode >= 1150 && weatherCode <= 1201)) {
-      if (isDay) {
-        newColors = ['#1c92d2', '#7ac4e6'];
-        gradientString = `linear-gradient(${gradientDirection}deg, ${newColors[0]} 0%, ${newColors[1]} 100%)`;
-      } else {
-        newColors = ['#141E30', '#243B55'];
-        gradientString = `linear-gradient(${gradientDirection}deg, ${newColors[0]} 0%, ${newColors[1]} 100%)`;
+      
+      // Mist, Fog (1030, 1135, 1147)
+      else if (weatherCode === 1030 || weatherCode === 1135 || weatherCode === 1147) {
+        if (isDay) {
+          return ['#b8c6db', '#f5f7fa'];
+        } else {
+          return ['#2c3e50', '#4ca1af'];
+        }
       }
-    }
-    
-    // Thunderstorm with rain
-    else if ((weatherCode >= 1087 && weatherCode <= 1117) || (weatherCode >= 1273 && weatherCode <= 1282)) {
-      if (isDay) {
-        newColors = ['#2c3e50', '#4ca1af'];
-        gradientString = `linear-gradient(${gradientDirection}deg, ${newColors[0]} 0%, ${newColors[1]} 100%)`;
-      } else {
-        newColors = ['#0f2027', '#203a43'];
-        gradientString = `linear-gradient(${gradientDirection}deg, ${newColors[0]} 0%, ${newColors[1]} 100%)`;
+      
+      // Light rain, Drizzle (1063, 1150-1153, 1180-1183, 1240)
+      else if (weatherCode === 1063 || 
+               (weatherCode >= 1150 && weatherCode <= 1153) || 
+               (weatherCode >= 1180 && weatherCode <= 1183) ||
+               weatherCode === 1240) {
+        if (isDay) {
+          return ['#89f7fe', '#66a6ff'];
+        } else {
+          return ['#141E30', '#243B55'];
+        }
       }
-    }
-    
-    // Snow (without thunder)
-    else if ((weatherCode >= 1210 && weatherCode <= 1237) || 
-            (weatherCode >= 1249 && weatherCode <= 1264)) {
-      if (isDay) {
-        newColors = ['#E6DADA', '#8CA6DB'];
-        gradientString = `linear-gradient(${gradientDirection}deg, ${newColors[0]} 0%, ${newColors[1]} 100%)`;
-      } else {
-        newColors = ['#2C3E50', '#4CA1AF'];
-        gradientString = `linear-gradient(${gradientDirection}deg, ${newColors[0]} 0%, ${newColors[1]} 100%)`;
+      
+      // Moderate rain (1186-1189, 1243)
+      else if ((weatherCode >= 1186 && weatherCode <= 1189) || weatherCode === 1243) {
+        if (isDay) {
+          return ['#5271C4', '#B19FFF'];
+        } else {
+          return ['#0F2027', '#203A43'];
+        }
       }
-    }
+      
+      // Heavy rain (1192-1195, 1246)
+      else if ((weatherCode >= 1192 && weatherCode <= 1195) || weatherCode === 1246) {
+        if (isDay) {
+          return ['#1c92d2', '#4d7193'];
+        } else {
+          return ['#0F2027', '#203A43'];
+        }
+      }
+      
+      // Freezing rain (1168-1171, 1198-1201)
+      else if ((weatherCode >= 1168 && weatherCode <= 1171) || 
+               (weatherCode >= 1198 && weatherCode <= 1201)) {
+        if (isDay) {
+          return ['#83a4d4', '#b6fbff'];
+        } else {
+          return ['#0B486B', '#3B8CB5'];
+        }
+      }
+      
+      // Light snow (1066, 1210-1213, 1255)
+      else if (weatherCode === 1066 || 
+               (weatherCode >= 1210 && weatherCode <= 1213) ||
+               weatherCode === 1255) {
+        if (isDay) {
+          return ['#E6DADA', '#8CA6DB'];
+        } else {
+          return ['#2C3E50', '#4CA1AF'];
+        }
+      }
+      
+      // Moderate to heavy snow (1114, 1216-1225, 1258)
+      else if (weatherCode === 1114 || 
+               (weatherCode >= 1216 && weatherCode <= 1225) ||
+               weatherCode === 1258) {
+        if (isDay) {
+          return ['#e4e5e6', '#92a3cd'];
+        } else {
+          return ['#2C3E50', '#203A43'];
+        }
+      }
+      
+      // Blizzard (1117)
+      else if (weatherCode === 1117) {
+        if (isDay) {
+          return ['#C9D6FF', '#E2E2E2'];
+        } else {
+          return ['#243B55', '#141E30'];
+        }
+      }
+      
+      // Sleet (1069, 1204-1207, 1249-1252)
+      else if (weatherCode === 1069 || 
+               (weatherCode >= 1204 && weatherCode <= 1207) ||
+               (weatherCode >= 1249 && weatherCode <= 1252)) {
+        if (isDay) {
+          return ['#83a4d4', '#9CECFB'];
+        } else {
+          return ['#0F2027', '#2C5364'];
+        }
+      }
+      
+      // Ice pellets (1237, 1261-1264)
+      else if (weatherCode === 1237 || 
+               (weatherCode >= 1261 && weatherCode <= 1264)) {
+        if (isDay) {
+          return ['#a1c4fd', '#c2e9fb'];
+        } else {
+          return ['#1A2980', '#26D0CE'];
+        }
+      }
+      
+      // Thunderstorm (1087)
+      else if (weatherCode === 1087) {
+        if (isDay) {
+          return ['#373B44', '#4286f4'];
+        } else {
+          return ['#050A27', '#212D40'];
+        }
+      }
+      
+      // Thunderstorm with rain (1273-1276)
+      else if (weatherCode >= 1273 && weatherCode <= 1276) {
+        if (isDay) {
+          return ['#4B6CB7', '#182848'];
+        } else {
+          return ['#000428', '#004e92'];
+        }
+      }
+      
+      // Thunderstorm with snow (1279-1282)
+      else if (weatherCode >= 1279 && weatherCode <= 1282) {
+        if (isDay) {
+          return ['#2B32B2', '#536976'];
+        } else {
+          return ['#000428', '#203A43'];
+        }
+      }
+      
+      // Default case for any other weather codes
+      return isDay ? ['#2193b0', '#6dd5ed'] : ['#2C3E50', '#4CA1AF'];
+    };
     
-    // Fog
-    else {
-      newColors = isDay ? ['#b8c6db', '#f5f7fa'] : ['#2c3e50', '#4ca1af'];
-      gradientString = `linear-gradient(${gradientDirection}deg, ${newColors[0]} 0%, ${newColors[1]} 100%)`;
-    }
+    newColors = getWeatherGradient();
+    gradientString = `linear-gradient(${gradientDirection}deg, ${newColors[0]} 0%, ${newColors[1]} 100%)`;
     
     // Update state with new colors and gradient
     setGradientColors(newColors);
@@ -194,8 +284,59 @@ const useBackgroundEffects = (weatherData, isDay, weatherCode, isMobile) => {
       return x - Math.floor(x);
     };
     
-    // Reduce number of clouds on mobile
-    const cloudCount = isMobile ? 4 : 10;
+    // Adjust cloud count and appearance based on weather code
+    let cloudCount = isMobile ? 4 : 10;
+    let cloudOpacity = 0.9;
+    let cloudSpeed = 1.0;
+    let cloudDarkness = false;
+    
+    // Adjust cloud parameters based on weather code
+    if (weatherCode === 1000) { // Clear sky
+      cloudCount = isMobile ? 1 : 2;
+      cloudOpacity = 0.4;
+    } else if (weatherCode === 1003) { // Partly cloudy
+      cloudCount = isMobile ? 2 : 5;
+      cloudOpacity = 0.6;
+    } else if (weatherCode === 1006) { // Cloudy
+      cloudCount = isMobile ? 3 : 12;
+      cloudOpacity = 0.8;
+    } else if (weatherCode === 1009) { // Overcast
+      cloudCount = isMobile ? 5 : 17;
+      cloudOpacity = 0.9;
+      cloudDarkness = true;
+      cloudSpeed = 0.7;
+    } else if ([1030, 1135, 1147].includes(weatherCode)) { // Mist, fog
+      cloudCount = isMobile ? 4 : 8;
+      cloudOpacity = 0.6;
+      cloudSpeed = 0.5;
+    } else if ((weatherCode >= 1063 && weatherCode <= 1072) || // Rain
+               (weatherCode >= 1150 && weatherCode <= 1201) ||
+               (weatherCode >= 1240 && weatherCode <= 1246)) {
+      cloudCount = isMobile ? 4 : 9;
+      cloudOpacity = 0.95;
+      cloudDarkness = true;
+      cloudSpeed = 0.8;
+      
+      // Heavier rain = darker clouds
+      if (weatherCode >= 1192 || weatherCode === 1246) {
+        cloudOpacity = 0.98;
+        cloudSpeed = 0.9;
+      }
+    } else if (weatherCode === 1087 || // Thunderstorm
+               (weatherCode >= 1273 && weatherCode <= 1282)) {
+      cloudCount = isMobile ? 5 : 10;
+      cloudOpacity = 0.98;
+      cloudDarkness = true;
+      cloudSpeed = 1.2;
+    } else if ((weatherCode >= 1066 && weatherCode <= 1069) || // Snow
+               (weatherCode >= 1114 && weatherCode <= 1117) ||
+               (weatherCode >= 1204 && weatherCode <= 1237) || 
+               (weatherCode >= 1249 && weatherCode <= 1264)) {
+      cloudCount = isMobile ? 4 : 8;
+      cloudOpacity = 0.9;
+      cloudDarkness = weatherCode >= 1117; // Only very dark for blizzard
+      cloudSpeed = 0.6;
+    }
     
     return [...Array(cloudCount)].map((_, i) => {
       // Distribute clouds more evenly across the vertical space
@@ -207,13 +348,15 @@ const useBackgroundEffects = (weatherData, isDay, weatherCode, isMobile) => {
       
       const top = verticalSection + seedRandom(i * 2) * 15;
       const left = horizontalSection - 20 + seedRandom(i * 2 + 1) * 25;
-      const size = 1 + seedRandom(i) * 0.5;
+      const size = 0.8 + seedRandom(i) * 0.7;
       
       return {
         key: `cloud-${i}-${weatherCode}`,
         delay: i * 1.5 + seedRandom(i) * 2,
         size: size,
-        dark: weatherCode >= 1063,
+        dark: cloudDarkness || weatherCode >= 1063,
+        opacity: cloudOpacity - (seedRandom(i) * 0.2),
+        speed: cloudSpeed - (seedRandom(i) * 0.2),
         style: { 
           top: `${top}%`,
           left: `${left}%`,
