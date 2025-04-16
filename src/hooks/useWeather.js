@@ -91,7 +91,9 @@ export const useWeather = () => {
   const handleInputChange = (text) => {
     setInputText(text);
     setLocation(text);
-    fetchSuggestions(text);
+    if (!localStorage.getItem(LOCATION_STORAGE_KEY).includes(text)) {
+      fetchSuggestions(text);
+    }
   };
 
   // Select a suggestion

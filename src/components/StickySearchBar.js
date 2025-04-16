@@ -227,8 +227,18 @@ const StickySearchBarComponent = ({
               onChange={(e) => handleInputChange(e.target.value)}
               onKeyDown={handleKeyDown}
               placeholder="Search for a city..."
-              onFocus={() => setSearchFocused(true)}
-              onBlur={() => setSearchFocused(false)}
+              onFocus={() => {
+                if (!searchFocused && inputText) {
+                  handleInputChange('');
+                }
+                setSearchFocused(true);
+              }}
+              onBlur={() => {
+                setSearchFocused(false);
+                if (inputText === '') {
+                  handleInputChange(localStorage.getItem('weather_dashboard_location'));
+                }
+              }}
               className={searchFocused ? 'focused' : ''}
             />
             
