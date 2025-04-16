@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import chroma from 'chroma-js';
 
 const WeatherBackground = ({ weatherData, isDay }) => {
-  const [currentTime, setCurrentTime] = useState(new Date());
+  const currentTime = new Date();
   const [sunPosition, setSunPosition] = useState(0);
   const [moonPosition, setMoonPosition] = useState(0);
   const [gradientColors, setGradientColors] = useState(['#4facfe', '#00f2fe']);
@@ -13,14 +13,6 @@ const WeatherBackground = ({ weatherData, isDay }) => {
   const [weatherCode, setWeatherCode] = useState(1000);
   const [overlayGradient, setOverlayGradient] = useState('');
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
-  
-  // Update time every minute
-  useEffect(() => {
-    const updateTime = () => setCurrentTime(new Date());
-    updateTime();
-    const timer = setInterval(updateTime, 60000);
-    return () => clearInterval(timer);
-  }, []);
   
   // Add resize listener to update mobile detection
   useEffect(() => {
@@ -105,7 +97,8 @@ const WeatherBackground = ({ weatherData, isDay }) => {
     } catch (error) {
       console.error("Error parsing sun/moon positions:", error);
     }
-  }, [weatherData, currentTime]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [weatherData]);
   
   // Create overlay gradient based on time and colors
   useEffect(() => {
@@ -118,7 +111,8 @@ const WeatherBackground = ({ weatherData, isDay }) => {
       ${chroma(gradientColors[0]).alpha(0.3).css()} 100%)`;
     
     setOverlayGradient(gradient);
-  }, [gradientColors, currentTime]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [gradientColors]);
   
   // Calculate background gradient based on weather and time of day
   useEffect(() => {
@@ -207,7 +201,8 @@ const WeatherBackground = ({ weatherData, isDay }) => {
     // Update state with new colors and gradient
     setGradientColors(newColors);
     setBackgroundGradient(gradientString);
-  }, [weatherCode, isDay, sunPosition, moonPosition, gradientDirection, gradientColors]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [weatherCode, isDay, sunPosition, moonPosition, gradientDirection]);
   
   // Generate cloud components
   const cloudComponents = useMemo(() => {

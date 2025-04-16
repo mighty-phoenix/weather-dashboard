@@ -1,3 +1,6 @@
 # https://www.robotstxt.org/robotstxt.html
 User-agent: *
-Disallow:
+Allow: /
+
+# Sitemap file location
+Sitemap: https://weathergala.vercel.app/sitemap.xml

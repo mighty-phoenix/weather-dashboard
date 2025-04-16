@@ -27,11 +27,13 @@ const CurrentWeather = ({
   
   return (
     <StyledCurrentWeather
+      as="section"
+      aria-label="Current Weather Information"
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
     >
-      <LocationInfo>
+      <LocationInfo as="header">
         <motion.h1
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
@@ -46,18 +48,19 @@ const CurrentWeather = ({
         >
           {weatherData.location.country}
         </motion.h2>
-        <motion.p
+        <motion.time
+          dateTime={weatherData.location.localtime}
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.5, delay: 0.3 }}
         >
           {weatherData.location.localtime ? formatLocalTime(weatherData.location.localtime) : ''}
-        </motion.p>
+        </motion.time>
       </LocationInfo>
       
-      <WeatherInfo>
+      <WeatherInfo as="article">
         <TemperatureDisplay>
-          <motion.div
+          <motion.figure
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ 
@@ -70,15 +73,20 @@ const CurrentWeather = ({
               <WeatherIcon 
                 code={weatherData.current.condition.code} 
                 isDay={isDay}
+                alt={`Weather icon for ${weatherData.current.condition.text}`}
               />
             </IconContainer>
-          </motion.div>
+          </motion.figure>
           <Temperature>
             <motion.span
               key={weatherData.current.temp_c}
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.3 }}
+              aria-label={`Temperature: ${getTemperature(
+                weatherData.current.temp_c, 
+                weatherData.current.temp_f
+              )} degrees ${unit === 'C' ? 'Celsius' : 'Fahrenheit'}`}
             >
               {getTemperature(
                 weatherData.current.temp_c, 
@@ -89,12 +97,13 @@ const CurrentWeather = ({
         </TemperatureDisplay>
         
         <WeatherCondition>
-          <span>{weatherData.current.condition.text}</span>
+          <span aria-label="Weather condition">{weatherData.current.condition.text}</span>
           {/* If this is thunder condition, add lightning icon */}
           {(weatherData.current.condition.code >= 1087 && weatherData.current.condition.code <= 1117) || 
            (weatherData.current.condition.code >= 1273 && weatherData.current.condition.code <= 1282) ? (
             <motion.span 
               className="thunder-indicator"
+              aria-hidden="true"
               animate={{
                 opacity: [1, 0.7, 1],
                 scale: [1, 1.1, 1],
@@ -115,20 +124,20 @@ const CurrentWeather = ({
           ) : null}
         </WeatherCondition>
         
-        <WeatherDetails>
+        <WeatherDetails as="dl">
           <motion.div
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.1 }}
           >
             <Detail>
-              <span>Feels Like</span>
-              <span>
+              <dt>Feels Like</dt>
+              <dd>
                 {getTemperature(
                   weatherData.current.feelslike_c, 
                   weatherData.current.feelslike_f
                 )}°{unit}
-              </span>
+              </dd>
             </Detail>
           </motion.div>
           
@@ -138,8 +147,8 @@ const CurrentWeather = ({
             transition={{ duration: 0.5, delay: 0.2 }}
           >
             <Detail>
-              <span>Humidity</span>
-              <span>{weatherData.current.humidity}%</span>
+              <dt>Humidity</dt>
+              <dd>{weatherData.current.humidity}%</dd>
             </Detail>
           </motion.div>
           
@@ -149,12 +158,12 @@ const CurrentWeather = ({
             transition={{ duration: 0.5, delay: 0.3 }}
           >
             <Detail>
-              <span>Wind</span>
-              <span>
+              <dt>Wind</dt>
+              <dd>
                 {unit === 'C' 
                   ? `${weatherData.current.wind_kph} km/h` 
                   : `${weatherData.current.wind_mph} mph`}
-              </span>
+              </dd>
             </Detail>
           </motion.div>
         </WeatherDetails>

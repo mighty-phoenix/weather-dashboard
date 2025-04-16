@@ -55,9 +55,6 @@ const getMoonPhaseValue = (moonPhaseStr) => {
 const MoonPhase = ({ moonPhaseStr, moonIllumination, size = 60 }) => {
   const phaseValue = getMoonPhaseValue(moonPhaseStr);
   
-  // Log for debugging
-  console.log(`Moon phase: ${moonPhaseStr}, value: ${phaseValue}, API illumination: ${moonIllumination}%`);
-  
   return (
     <MoonPhaseContainer
       initial={{ opacity: 0, y: 10 }}

@@ -7,6 +7,7 @@ import AdditionalInfo from './components/AdditionalInfo';
 import HourlyForecast from './components/HourlyForecast';
 import WeatherBackground from './components/WeatherBackground';
 import Forecast from './components/Forecast';
+import SEO from './components/SEO';
 import {
   AppContainer,
   WeatherDashboard,
@@ -46,10 +47,8 @@ function App() {
 
   const [expandedForecast, setExpandedForecast] = useState(null);
   const [showTooltip, setShowTooltip] = useState(null);
-  const [currentTime, setCurrentTime] = useState(new Date());
   const [isDay, setIsDay] = useState(true);
   const [searchFocused, setSearchFocused] = useState(false);
-  const [lastUpdated, setLastUpdated] = useState(null);
   const weatherDashboardRef = useRef(null);
 
   // Function to scroll to weather dashboard
@@ -64,15 +63,9 @@ function App() {
 
   // Update current time based on API data
   useEffect(() => {
-    if (weatherData && weatherData.location && weatherData.location.localtime) {
-      setCurrentTime(new Date(weatherData.location.localtime));
-      setLastUpdated(new Date());
-    }
-  }, [weatherData]);
+    if (!weatherData || !weatherData.forecast) return;
 
-  // Determine if it's day or night based on sunrise/sunset
-  useEffect(() => {
-    if (!weatherData) return;
+    const currentTime = new Date(weatherData.location.localtime);
     
     // Use currentTime which is now based on the API's location time
     const hours = currentTime.getHours();
@@ -105,7 +98,7 @@ function App() {
     
     // Set isDay based on current time
     setIsDay(timeInMinutes >= sunriseInMinutes && timeInMinutes < sunsetInMinutes);
-  }, [weatherData, currentTime]);
+  }, [weatherData]);
 
 
   const toggleForecast = (index) => {
@@ -122,6 +115,10 @@ function App() {
 
   return (
     <AppContainer>
+      {/* Dynamic SEO component */}
+      {weatherData && (
+        <SEO weatherData={weatherData} location={location} />
+      )}
       <GlobalTextColor colors={textColor} />
       <GlobalTypography />
       <WeatherBackground weatherData={weatherData} isDay={isDay} />
@@ -149,7 +146,12 @@ function App() {
       />
       
       {/* Main Weather Dashboard Container */}
-      <WeatherDashboard ref={weatherDashboardRef} className="weather-dashboard glass">
+      <WeatherDashboard 
+        ref={weatherDashboardRef} 
+        className="weather-dashboard glass"
+        as="main"
+        aria-label="Weather Dashboard"
+      >
         <AnimatePresence mode="wait">
           {loading ? (
             <LoadingContainer
@@ -199,7 +201,7 @@ function App() {
                   unit={unit} 
                   getTemperature={getTemperature} 
                   isDay={isDay}
-                  currentTime={currentTime}
+                  currentTime={new Date(weatherData.location.localtime)}
                 />
               </HourlyForecastWrapper>
               
@@ -221,11 +223,9 @@ function App() {
                 setShowTooltip={setShowTooltip}
               />
               
-              {lastUpdated && (
                 <Attribution>
-                  Created with ❤️ by <a href="www.linkedin.com/in/rakshit-kumar-a8b11914b/" target="_blank" rel="noopener noreferrer">Rakshit Kumar</a>
+                  Created with ❤️ by <a href="https://www.linkedin.com/in/rakshit-kumar-a8b11914b/" target="_blank" rel="noopener noreferrer">Rakshit Kumar</a>
                 </Attribution>
-              )}
             </motion.div>
           ) : null}
         </AnimatePresence>

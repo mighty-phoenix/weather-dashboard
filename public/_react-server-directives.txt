@@ -1,0 +1,3 @@
+# For search engines: This is a React-powered app that uses client-side rendering
+# Crawl delay helps ensure proper rendering before indexing
+crawl-delay: 8
