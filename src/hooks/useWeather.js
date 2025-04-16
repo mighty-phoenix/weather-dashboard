@@ -256,8 +256,8 @@ export const useWeather = () => {
 
   // Get temperature in the current unit
   const getTemperature = (temp_c, temp_f) => {
-    if (unit === 'C') return Math.round(temp_c);
-    return Math.round(temp_f);
+    if (unit === 'C') return temp_c;
+    return temp_f;
   };
 
   // Clear suggestions
