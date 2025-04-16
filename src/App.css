@@ -245,6 +245,7 @@ input:focus {
 
 /* Improved animations for location chips */
 .location-chip {
+  font-weight: 700;
   transition: all 0.3s ease;
   animation: 0.5s popIn ease-out;
   box-shadow: none;
