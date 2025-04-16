@@ -135,12 +135,12 @@ export const Detail = styled.div`
     color: var(--text-tertiary, rgba(255, 255, 255, 0.7));
     margin-bottom: 5px;
     line-height: ${LINE_HEIGHT.normal};
-    font-weight: ${FONT_WEIGHT.medium};
+    font-weight: 500;
   }
 
   span:last-child {
     font-size: ${FONT_SIZE.md};
-    font-weight: ${FONT_WEIGHT.medium};
+    font-weight: 500;
     line-height: ${LINE_HEIGHT.normal};
   }
 `; 
