@@ -78,7 +78,6 @@ const SEO = ({ weatherData, location }) => {
       }
     }
   };
-  console.log(structuredData);
   return (
     <Helmet>
       {/* Primary Meta Tags */}
