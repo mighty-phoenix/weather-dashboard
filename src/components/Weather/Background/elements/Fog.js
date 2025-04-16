@@ -13,91 +13,91 @@ const Fog = ({ weatherCode, isDay }) => {
     // Mist (1030)
     if (weatherCode === 1030) {
       return {
-        fogLayers: 3,
-        elementsPerLayer: 6,
+        fogLayers: 2,
+        elementsPerLayer: 4,
         opacity: {
           base: isDay ? 0.4 : 0.5,
           variation: 0.2
         },
         speed: {
-          base: 100,
-          variation: 30
+          base: 120,
+          variation: 20
         },
         size: {
-          min: 40,
-          max: 70
+          min: 50,
+          max: 75
         },
         blur: {
           min: 8,
-          max: 15
+          max: 12
         }
       };
     }
     // Fog (1135)
     else if (weatherCode === 1135) {
       return {
-        fogLayers: 4,
-        elementsPerLayer: 7,
+        fogLayers: 3,
+        elementsPerLayer: 5,
         opacity: {
           base: isDay ? 0.6 : 0.7,
           variation: 0.2
         },
         speed: {
-          base: 120,
-          variation: 40
+          base: 140,
+          variation: 30
         },
         size: {
-          min: 50,
-          max: 80
+          min: 55,
+          max: 85
         },
         blur: {
           min: 10,
-          max: 20
+          max: 18
         }
       };
     }
     // Freezing fog (1147)
     else if (weatherCode === 1147) {
       return {
-        fogLayers: 5,
-        elementsPerLayer: 8,
+        fogLayers: 3,
+        elementsPerLayer: 5,
         opacity: {
           base: isDay ? 0.7 : 0.8,
           variation: 0.15
         },
         speed: {
-          base: 80, // slower movement
+          base: 100,
           variation: 25
         },
         size: {
-          min: 55,
+          min: 60,
           max: 90
         },
         blur: {
           min: 12,
-          max: 25
+          max: 20
         }
       };
     }
     // Default fog configuration
     return {
-      fogLayers: 4,
-      elementsPerLayer: 6,
+      fogLayers: 3,
+      elementsPerLayer: 4,
       opacity: {
         base: isDay ? 0.5 : 0.6,
         variation: 0.2
       },
       speed: {
-        base: 100,
-        variation: 30
+        base: 120,
+        variation: 25
       },
       size: {
-        min: 50,
-        max: 80
+        min: 55,
+        max: 85
       },
       blur: {
         min: 10,
-        max: 20
+        max: 18
       }
     };
   }, [weatherCode, isDay]);
@@ -148,7 +148,8 @@ const Fog = ({ weatherCode, isDay }) => {
             filter: `blur(${blurAmount}px)`,
             animationDuration: `${randomSpeed}s`,
             zIndex,
-            animationDelay: `${randomVal * 10}s`
+            animationDelay: `${randomVal * 10}s`,
+            willChange: 'transform, opacity'
           }
         });
       }
@@ -174,19 +175,20 @@ const Fog = ({ weatherCode, isDay }) => {
       return x - Math.floor(x);
     };
     
-    const cloudCount = weatherCode === 1147 ? 5 : 3;
+    const cloudCount = weatherCode === 1147 ? 3 : 2;
     
     return [...Array(cloudCount)].map((_, i) => {
       return {
         key: `fog-cloud-${i}-${weatherCode}`,
-        delay: i * 2 + seedRandom(i) * 5,
-        size: 0.8 + seedRandom(i) * 0.6,
-        dark: weatherCode === 1147, // Darker clouds for freezing fog
+        delay: i * 3 + seedRandom(i) * 5,
+        size: 0.9 + seedRandom(i) * 0.5,
+        dark: weatherCode === 1147,
         style: {
-          top: `${(i * 20) + seedRandom(i) * 15}%`,
+          top: `${(i * 30) + seedRandom(i) * 15}%`,
           left: `${seedRandom(i + 50) * 80}%`,
           opacity: 0.7,
-          zIndex: 2
+          zIndex: 2,
+          willChange: 'transform'
         }
       };
     });
@@ -217,18 +219,18 @@ const Fog = ({ weatherCode, isDay }) => {
                 style={element.style}
                 animate={{ 
                   x: ["0%", "100%", "0%"],
-                  scale: [1, 1.05, 1],
                   opacity: [
                     element.style.opacity,
-                    element.style.opacity - 0.1,
+                    element.style.opacity - 0.05,
                     element.style.opacity
                   ]
                 }}
                 transition={{
                   duration: parseInt(element.style.animationDuration),
-                  ease: "easeInOut",
+                  ease: "linear",
                   repeat: Infinity,
-                  delay: parseInt(element.style.animationDelay) || 0
+                  delay: parseInt(element.style.animationDelay) || 0,
+                  times: [0, 0.5, 1]
                 }}
               />
             ))}

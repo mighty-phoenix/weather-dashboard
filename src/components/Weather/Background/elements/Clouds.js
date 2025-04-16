@@ -41,7 +41,7 @@ const Clouds = ({ cloudComponents, isDay, sunPosition, moonPosition, weatherCode
       </CloudsContainer>
       
       {/* Render sun/moon only for partly cloudy */}
-      {weatherCode === 1003 && isDay && sunPosition > 0 && (
+      {weatherCode === 1003 && isDay && (
         <Sun
           animate={{ left: '90%', top: '50%' }}
           transition={{ duration: 1 }}
@@ -49,7 +49,7 @@ const Clouds = ({ cloudComponents, isDay, sunPosition, moonPosition, weatherCode
         />
       )}
       
-      {weatherCode === 1003 && !isDay && moonPosition > 0 && (
+      {weatherCode === 1003 && !isDay && (
         <Moon
           animate={{ left: '90%', top: '50%' }}
           transition={{ duration: 1 }}

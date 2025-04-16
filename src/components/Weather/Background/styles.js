@@ -604,6 +604,7 @@ export const FogContainer = styled.div`
   height: 100%;
   overflow: hidden;
   z-index: 2;
+  transform: translateZ(0);
   
   &.freezing {
     filter: saturate(0.8) brightness(0.9);
@@ -615,13 +616,19 @@ export const FogLayer = styled.div`
   width: 100%;
   height: 100%;
   overflow: hidden;
+  transform: translateZ(0);
+  will-change: transform;
 `;
 
 export const FogElement = styled(motion.div)`
   position: absolute;
   background: white;
   border-radius: 50%;
-  box-shadow: 0 0 40px 20px white;
+  box-shadow: 0 0 25px 12px white;
+  transform: translateZ(0);
+  will-change: transform, opacity;
+  backface-visibility: hidden;
+  perspective: 1000;
 `;
 
 export const LightningFlash = styled(motion.div)`

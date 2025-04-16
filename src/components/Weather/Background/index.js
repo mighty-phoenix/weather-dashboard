@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useMemo } from 'react';
+import React, { useEffect, useState, useMemo, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 // Import background components
@@ -16,18 +16,29 @@ const WeatherBackground = ({ weatherData, isDay }) => {
   const [weatherCode, setWeatherCode] = useState(1000);
   const [prevWeatherCode, setPrevWeatherCode] = useState(null);
   
-  // Add resize listener to update mobile detection
+  // Add resize listener to update mobile detection with debouncing for performance
   useEffect(() => {
-    const handleResize = () => setIsMobile(window.innerWidth < 768);
+    let resizeTimer;
+    const handleResize = () => {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(() => {
+        setIsMobile(window.innerWidth < 768);
+      }, 250); // Add debounce of 250ms to avoid excessive updates
+    };
     window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
+    return () => {
+      clearTimeout(resizeTimer);
+      window.removeEventListener('resize', handleResize);
+    };
   }, []);
   
   // Update weather code whenever weather data changes
   useEffect(() => {
     if (weatherData && weatherData.current && weatherData.current.condition) {
-      setPrevWeatherCode(weatherCode);
-      setWeatherCode(weatherData.current.condition.code);
+      if (weatherCode !== weatherData.current.condition.code) {
+        setPrevWeatherCode(weatherCode);
+        setWeatherCode(weatherData.current.condition.code);
+      }
     }
   }, [weatherData, weatherCode]);
 
@@ -40,8 +51,8 @@ const WeatherBackground = ({ weatherData, isDay }) => {
     cloudComponents
   } = useBackgroundEffects(weatherData, isDay, weatherCode, isMobile);
   
-  // Get friendly weather type for animation keys
-  const getWeatherType = (code) => {
+  // Get friendly weather type for animation keys - memoized
+  const getWeatherType = useCallback((code) => {
     // Clear sky
     if (code === 1000) return 'clear';
     
@@ -68,11 +79,11 @@ const WeatherBackground = ({ weatherData, isDay }) => {
     
     // Default
     return 'unknown';
-  };
+  }, []);
   
   // Track weather transitions for smoother animation
-  const weatherType = useMemo(() => getWeatherType(weatherCode), [weatherCode]);
-  const prevWeatherType = useMemo(() => prevWeatherCode ? getWeatherType(prevWeatherCode) : null, [prevWeatherCode]);
+  const weatherType = useMemo(() => getWeatherType(weatherCode), [weatherCode, getWeatherType]);
+  const prevWeatherType = useMemo(() => prevWeatherCode ? getWeatherType(prevWeatherCode) : null, [prevWeatherCode, getWeatherType]);
   
   // Determine if sun/moon should be visible based on weather condition
   const shouldShowCelestialBodies = useMemo(() => {
@@ -80,7 +91,34 @@ const WeatherBackground = ({ weatherData, isDay }) => {
     return weatherCode === 1000 || weatherCode === 1003;
   }, [weatherCode]);
 
-  // Render weather-specific elements
+  // Determine if we need a dual transition for visual effect
+  const shouldShowDualTransition = useMemo(() => {
+    if (!prevWeatherType || prevWeatherType === weatherType) return false;
+    
+    const significantChange = (
+      // Transitions that benefit from dual animation
+      (prevWeatherType === 'clear' && weatherType === 'rain') ||
+      (prevWeatherType === 'clear' && weatherType === 'snow') ||
+      (prevWeatherType === 'clear' && weatherType === 'thunder') ||
+      (prevWeatherType === 'cloudy' && weatherType === 'rain') ||
+      (prevWeatherType === 'cloudy' && weatherType === 'snow') ||
+      (prevWeatherType === 'rain' && weatherType === 'snow') ||
+      (prevWeatherType === 'rain' && weatherType === 'thunder')
+    );
+    
+    return significantChange;
+  }, [prevWeatherType, weatherType]);
+  
+  // Optimize animation for fog/mist on low-end devices by reducing transition duration
+  const getTransitionDuration = useMemo(() => {
+    // Use shorter animations for fog/mist to reduce performance impact
+    if ([1030, 1135, 1147].includes(weatherCode)) {
+      return shouldShowDualTransition ? 1 : 0.5;
+    }
+    return shouldShowDualTransition ? 1.5 : 1;
+  }, [weatherCode, shouldShowDualTransition]);
+
+  // Render weather-specific elements with memoization to avoid unnecessary recalculations
   const renderWeatherElements = useMemo(() => {
     if (!weatherData) return null;
     
@@ -100,9 +138,12 @@ const WeatherBackground = ({ weatherData, isDay }) => {
       />;
     }
     
-    // Mist, fog, freezing fog
+    // Mist, fog, freezing fog - optimize for low-end devices
     if (weatherCode === 1030 || weatherCode === 1135 || weatherCode === 1147) {
-      return <FogComponent weatherCode={weatherCode} isDay={isDay} />;
+      return <FogComponent 
+        weatherCode={weatherCode} 
+        isDay={isDay} 
+      />;
     }
     
     // Rain (all rain types including drizzle, freezing rain, and rain showers)
@@ -142,24 +183,6 @@ const WeatherBackground = ({ weatherData, isDay }) => {
     return <FogComponent weatherCode={weatherCode} isDay={isDay} />;
   }, [weatherCode, isDay, isMobile, cloudComponents, sunPosition, moonPosition, weatherData]);
   
-  // Render dual weather elements during transitions if needed
-  const shouldShowDualTransition = useMemo(() => {
-    if (!prevWeatherType || prevWeatherType === weatherType) return false;
-    
-    const significantChange = (
-      // Transitions that benefit from dual animation
-      (prevWeatherType === 'clear' && weatherType === 'rain') ||
-      (prevWeatherType === 'clear' && weatherType === 'snow') ||
-      (prevWeatherType === 'clear' && weatherType === 'thunder') ||
-      (prevWeatherType === 'cloudy' && weatherType === 'rain') ||
-      (prevWeatherType === 'cloudy' && weatherType === 'snow') ||
-      (prevWeatherType === 'rain' && weatherType === 'snow') ||
-      (prevWeatherType === 'rain' && weatherType === 'thunder')
-    );
-    
-    return significantChange;
-  }, [prevWeatherType, weatherType]);
-  
   return (
     <BackgroundContainer style={{ background: backgroundGradient }}>
       <GradientOverlay
@@ -192,7 +215,10 @@ const WeatherBackground = ({ weatherData, isDay }) => {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          transition={{ duration: shouldShowDualTransition ? 1.5 : 1 }}
+          transition={{ 
+            duration: getTransitionDuration,
+            ease: "linear" // Changed from default to linear for better performance
+          }}
         >
           {renderWeatherElements}
         </motion.div>
@@ -201,4 +227,4 @@ const WeatherBackground = ({ weatherData, isDay }) => {
   );
 };
 
-export default WeatherBackground; 
+export default React.memo(WeatherBackground); // Wrapped in memo to avoid unnecessary re-renders 
