@@ -1,5 +1,6 @@
 import React, { useRef, useEffect, useState } from 'react';
-import { BiSearchAlt, BiWorld, BiCurrentLocation } from 'react-icons/bi';
+import { BiSearchAlt, BiWorld} from 'react-icons/bi';
+import { FiMapPin } from "react-icons/fi";
 import { RiTempColdLine, RiTempHotLine } from 'react-icons/ri';
 import { SearchContainer, SearchInput, SearchButton, LocationButton, UnitToggle } from '../styles/AppStyles';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -334,7 +335,7 @@ const StickySearchBarComponent = ({
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.9, transition: { duration: 0.1 } }}
           >
-            <BiCurrentLocation />
+            <FiMapPin size={18} />
           </LocationButton>
           <UnitToggle 
             type="button"
