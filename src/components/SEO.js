@@ -98,6 +98,24 @@ const SEO = ({ weatherData, location }) => {
       <meta property="twitter:description" content={`Current weather in ${locationString}: ${currentTemp}°C, ${currentCondition}. Get hourly and daily forecasts, weather alerts, and detailed weather information.`} />
       <meta property="twitter:image" content="https://weathergala.vercel.app/og.png" />
       
+      {/* WhatsApp */}
+      <meta property="og:image:width" content="1200" />
+      <meta property="og:image:height" content="630" />
+      <meta property="og:site_name" content="WeatherGala" />
+      
+      {/* LinkedIn */}
+      <meta property="linkedin:card" content="summary_large_image" />
+      <meta property="linkedin:title" content={`${currentTemp}°C ${currentCondition} in ${name} | WeatherGala`} />
+      <meta property="linkedin:description" content={`Current weather in ${locationString}: ${currentTemp}°C, ${currentCondition}. Get hourly and daily forecasts, weather alerts, and detailed weather information.`} />
+      <meta property="linkedin:image" content="https://weathergala.vercel.app/og.png" />
+      
+      {/* Pinterest */}
+      <meta property="pinterest:image" content="https://weathergala.vercel.app/og.png" />
+      <meta property="pinterest:description" content={`Current weather in ${locationString}: ${currentTemp}°C, ${currentCondition}. Get hourly and daily forecasts, weather alerts, and detailed weather information.`} />
+      
+      {/* Slack */}
+      <meta name="slack-app-id" content="weather-gala" />
+      
       {/* Canonical URL */}
       <link rel="canonical" href={`https://weathergala.vercel.app`} />
       
