@@ -98,7 +98,7 @@ export const useWeather = () => {
   const selectSuggestion = (suggestion) => {
     const locationName = suggestion.name;
     const fullName = `${locationName}`;
-    if (location !== fullName) {
+    if (localStorage.getItem(LOCATION_STORAGE_KEY) !== fullName) {
       setLocation(fullName);
       setInputText(fullName);
       setSuggestions([]);
