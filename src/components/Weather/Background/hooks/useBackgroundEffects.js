@@ -2,7 +2,6 @@ import { useEffect, useState, useMemo } from 'react';
 import chroma from 'chroma-js';
 
 const useBackgroundEffects = (weatherData, isDay, weatherCode, isMobile) => {
-  const [currentTime] = useState(new Date());
   const [sunPosition, setSunPosition] = useState(0);
   const [moonPosition, setMoonPosition] = useState(0);
   const [gradientColors, setGradientColors] = useState(['#4facfe', '#00f2fe']);
