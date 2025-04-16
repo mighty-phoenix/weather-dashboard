@@ -163,6 +163,140 @@ const CurrentWeather = ({
                 {unit === 'C' 
                   ? `${weatherData.current.wind_kph} km/h` 
                   : `${weatherData.current.wind_mph} mph`}
+                <motion.div 
+                  style={{
+                    display: 'flex',
+                    justifyContent: 'center',
+                    marginTop: '2px',
+                    position: 'relative',
+                    paddingTop: '10px',
+                    paddingBottom: '5px'
+                  }}
+                  initial={{ opacity: 0, scale: 0 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ duration: 0.5, delay: 0.4 }}
+                >
+                  {/* North indicator */}
+                  <motion.div
+                    style={{
+                      position: 'absolute',
+                      top: '-6px',
+                      fontSize: '11px',
+                      fontWeight: 'bold',
+                      color: '#ff5555',
+                      textShadow: '0px 0px 2px rgba(0,0,0,0.5)'
+                    }}
+                    initial={{ opacity: 0, y: 5 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ 
+                      delay: 0.8,
+                      duration: 0.3
+                    }}
+                  >
+                    N
+                  </motion.div>
+                  <motion.div
+                    style={{
+                      width: '28px',
+                      height: '28px',
+                      display: 'flex',
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                      background: 'rgba(255, 255, 255, 0.1)',
+                      borderRadius: '50%',
+                      padding: '5px',
+                      boxShadow: '0 2px 8px rgba(0, 0, 0, 0.15)'
+                    }}
+                    whileHover={{ 
+                      scale: 1.1,
+                      background: 'rgba(255, 255, 255, 0.2)',
+                      boxShadow: '0 4px 12px rgba(0, 0, 0, 0.2)' 
+                    }}
+                    animate={{
+                      boxShadow: [
+                        '0 2px 8px rgba(0, 0, 0, 0.15)',
+                        '0 4px 12px rgba(100, 180, 255, 0.4)',
+                        '0 2px 8px rgba(0, 0, 0, 0.15)'
+                      ]
+                    }}
+                    transition={{
+                      boxShadow: {
+                        repeat: Infinity,
+                        repeatType: "reverse",
+                        duration: 2
+                      }
+                    }}
+                    aria-label={`Wind direction: ${weatherData.current.wind_degree} degrees`}
+                  >
+                    <motion.svg 
+                      width="20" 
+                      height="20" 
+                      viewBox="0 0 24 24" 
+                      fill="none" 
+                      xmlns="http://www.w3.org/2000/svg"
+                      initial={{ rotate: 0 }}
+                      animate={{ rotate: weatherData.current.wind_degree }}
+                      transition={{ 
+                        type: "spring", 
+                        stiffness: 60, 
+                        damping: 20,
+                        duration: 1 
+                      }}
+                    >
+                      <motion.path 
+                        d="M12 3L12 21M12 3L7 9M12 3L17 9" 
+                        stroke="rgba(255, 255, 255, 0.9)" 
+                        strokeWidth="2.5" 
+                        strokeLinecap="round" 
+                        strokeLinejoin="round"
+                        initial={{ pathLength: 0, opacity: 0 }}
+                        animate={{ 
+                          pathLength: 1, 
+                          opacity: 1,
+                          filter: [
+                            "drop-shadow(0 0 1px rgba(255, 255, 255, 0.2))",
+                            "drop-shadow(0 0 3px rgba(100, 180, 255, 0.6))",
+                            "drop-shadow(0 0 1px rgba(255, 255, 255, 0.2))"
+                          ]
+                        }}
+                        transition={{ 
+                          pathLength: { duration: 0.8, delay: 0.2 }, 
+                          opacity: { duration: 0.4, delay: 0.2 },
+                          filter: {
+                            repeat: Infinity,
+                            repeatType: "reverse",
+                            duration: 2
+                          }
+                        }}
+                      />
+                      <motion.circle
+                        cx="12"
+                        cy="12"
+                        r="1.5"
+                        fill="rgba(255, 255, 255, 0.9)"
+                        initial={{ scale: 0, opacity: 0 }}
+                        animate={{ 
+                          scale: 1, 
+                          opacity: 1,
+                          fill: [
+                            "rgba(255, 255, 255, 0.9)",
+                            "rgba(100, 180, 255, 0.9)",
+                            "rgba(255, 255, 255, 0.9)"
+                          ]
+                        }}
+                        transition={{ 
+                          scale: { duration: 0.5, delay: 0.6 },
+                          opacity: { duration: 0.5, delay: 0.6 },
+                          fill: {
+                            repeat: Infinity,
+                            repeatType: "reverse",
+                            duration: 2
+                          }
+                        }}
+                      />
+                    </motion.svg>
+                  </motion.div>
+                </motion.div>
               </dd>
             </Detail>
           </motion.div>

@@ -10,27 +10,6 @@ const LOCATION_STORAGE_KEY = 'weather_dashboard_location';
 
 // Add logging helper
 const logWeatherData = (data) => {
-  // console.log('Weather API Response:', {
-  //   location: data.location,
-  //   current: {
-  //     condition: data.current.condition,
-  //     temp_c: data.current.temp_c,
-  //     temp_f: data.current.temp_f,
-  //     is_day: data.current.is_day
-  //   },
-  //   forecast: {
-  //     forecastday: data.forecast.forecastday.map(day => ({
-  //       date: day.date,
-  //       day: {
-  //         condition: day.day.condition
-  //       },
-  //       hour: day.hour.map(h => ({
-  //         time: h.time,
-  //         condition: h.condition
-  //       }))
-  //     }))
-  //   }
-  // });
 };
 
 export const useWeather = () => {
