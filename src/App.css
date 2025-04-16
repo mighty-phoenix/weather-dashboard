@@ -209,6 +209,8 @@ body {
 .glass {
   background: rgba(0, 0, 0, 0.35);
   border-radius: 24px;
+  backdrop-filter: blur(0.5px);
+  -webkit-backdrop-filter: blur(0.5px);
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
   border: 1px solid rgba(255, 255, 255, 0.1);
 }
