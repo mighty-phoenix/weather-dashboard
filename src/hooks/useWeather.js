@@ -64,7 +64,7 @@ export const useWeather = () => {
         params: {
           key: API_KEY,
           q: query,
-          days: 5,
+          days: 10,
           aqi: 'yes',
           alerts: 'yes'
         }

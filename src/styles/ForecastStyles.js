@@ -5,8 +5,8 @@ import { FONT_SIZE, FONT_WEIGHT, LINE_HEIGHT } from './TypographyStyles';
 export const ForecastContainer = styled(motion.div)`
   margin-top: 40px;
   background: rgba(0, 0, 0, 0.25);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
   border-radius: 18px;
   padding: 20px;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
@@ -53,8 +53,8 @@ export const ForecastItem = styled(motion.div)`
   flex-direction: column;
   align-items: center;
   cursor: pointer;
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
   border: 1px solid rgba(255, 255, 255, 0.1);
   box-shadow: ${props => props.expanded ? '0 8px 32px rgba(0, 0, 0, 0.3)' : '0 4px 12px rgba(0, 0, 0, 0.3)'};
   position: relative;
@@ -192,8 +192,8 @@ export const ExpandedForecast = styled(motion.div)`
 export const HourlyForecastContainer = styled(motion.div)`
   margin-top: 40px;
   background: rgba(0, 0, 0, 0.25);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
   border-radius: 18px;
   padding: 20px;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
@@ -236,8 +236,8 @@ export const FullWidthPanel = styled(motion.div)`
   overflow: hidden;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
   border: 1px solid rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
   transform-origin: center top;
 `;
 

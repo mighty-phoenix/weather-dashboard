@@ -825,7 +825,7 @@ const RainLayer = styled.div`
   }
   
   &.heavy {
-    filter: blur(0.3px);
+    filter: blur(0.4px);
   }
 `;
 

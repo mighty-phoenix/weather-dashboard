@@ -382,8 +382,8 @@ const HourlyForecast = ({ weatherData, unit, getTemperature, isDay, currentTime 
 const HourlyForecastContainer = styled(motion.div)`
   margin-top: 40px;
   background: rgba(0, 0, 0, 0.25);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
   border-radius: 18px;
   padding: 20px;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
@@ -421,8 +421,8 @@ const DayDisplay = styled.div`
   font-size: 0.9rem;
   min-width: 150px;
   text-align: center;
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
 `;
 
@@ -506,7 +506,7 @@ const HourlyItem = styled(motion.div)`
     }
     return props.isNow ? '0.25' : '0.1';
   }});
-  backdrop-filter: blur(8px);
+  backdrop-filter: blur(2px);
   position: relative;
   overflow: hidden;
   margin: 5px;

@@ -19,8 +19,8 @@ export const InfoCard = styled(motion.div)`
   background: rgba(0, 0, 0, 0.3);
   border-radius: 15px;
   padding: 20px;
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
   border: 1px solid rgba(255, 255, 255, 0.1);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
   position: relative;

@@ -165,7 +165,7 @@ const Forecast = ({
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, delay: 0.4 }}
     >
-      <h3>5-Day Forecast</h3>
+      <h3>10-Day Forecast</h3>
       <ForecastList className="hide-scrollbar">
         {weatherData.forecast.forecastday.map((day, index) => (
           <ForecastItem

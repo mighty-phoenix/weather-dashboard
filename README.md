@@ -11,7 +11,7 @@ A beautiful, modern weather dashboard built with React, featuring real-time weat
 - 📍 Current location detection
 - 📱 Responsive design that works on all devices
 - 🌡️ Temperature unit toggle (Celsius/Fahrenheit)
-- 📊 5-day weather forecast
+- 📊 10-day weather forecast
 - ⏱️ Hourly forecast with beautiful UI
 - 🎭 Animated weather icons based on conditions
 - 💨 Wind, humidity, and "feels like" temperature data
@@ -63,7 +63,7 @@ A beautiful, modern weather dashboard built with React, featuring real-time weat
 - **Use current location**: Click the location icon to use your current location
 - **Switch temperature units**: Click the temperature unit toggle (°C/°F)
 - **View hourly forecast**: Scroll horizontally through the hourly forecast section
-- **View daily forecast**: Check the 5-day forecast at the bottom
+- **View daily forecast**: Check the 10-day forecast at the bottom
 - **Check weather details**: View additional details like humidity, wind speed, feels like temperature
 
 ## Customization
