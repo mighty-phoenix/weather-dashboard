@@ -39,7 +39,7 @@ A beautiful, modern weather dashboard built with React, featuring real-time weat
 
 2. Install dependencies:
    ```bash
-   npm install --force
+   npm install --legacy-peer-deps
    ```
 
 3. Get an API key from [WeatherAPI.com](https://www.weatherapi.com/)
