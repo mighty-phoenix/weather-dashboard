@@ -122,7 +122,3 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 - [WeatherAPI.com](https://www.weatherapi.com/) for providing the weather data
 - [React Icons](https://react-icons.github.io/react-icons/) for the weather icons
 - [Framer Motion](https://www.framer.com/motion/) for the animations
-
-## Contact
-
-If you have any questions or suggestions, please open an issue or contact [your-email@example.com].
