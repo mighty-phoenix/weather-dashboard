@@ -10,6 +10,7 @@ A beautiful, modern weather dashboard built with React, featuring real-time weat
 - 🌤️ Real-time weather data from WeatherAPI.com
 - 🔍 Location search with autocomplete
 - 📍 Current location detection
+- 📍 Last Searched location saved as your default location
 - 📱 Responsive design that works on all devices
 - 🌡️ Temperature unit toggle (Celsius/Fahrenheit)
 - 📊 10-day weather forecast
