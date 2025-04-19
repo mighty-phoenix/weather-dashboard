@@ -98,7 +98,7 @@ const PortalTooltip = ({ show, content, anchorEl, onMouseEnter, onMouseLeave }) 
         opacity: show ? 1 : 0,
         transition: 'opacity 0.15s ease-in-out',
       }}
-      onTouchStart={handleMouseEnter}
+      onClick={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
     >
       {content}
