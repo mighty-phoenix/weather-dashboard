@@ -42,7 +42,7 @@ A beautiful, modern weather dashboard built with React, featuring real-time weat
 
 3. Get an API key from [WeatherAPI.com](https://www.weatherapi.com/)
 
-4. Create a `.env` file in the root directory and add your API key from [WeatherApi](https://weatherapi.com):
+4. Create a `.env` file in the root directory and add your API key from [WeatherApi](https://www.weatherapi.com/):
    ```
    REACT_APP_WEATHER_API_KEY=your_api_key_here
    ```
