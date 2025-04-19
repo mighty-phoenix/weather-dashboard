@@ -140,13 +140,6 @@ const Forecast = ({
     }, 300); // 300ms delay before hiding
   };
 
-  const handleTooltipToggle = (tooltipId) => {
-    if (showTooltip === tooltipId) {
-      setShowTooltip(null);
-    } else {
-      setShowTooltip(tooltipId);
-    }
-  };
 
   const conditionsTooltipContent = (
     <>
@@ -369,7 +362,8 @@ const Forecast = ({
                           <h5>Other Conditions</h5>
                           <InfoIcon 
                             ref={infoIconRef}
-                            onTouchStart={() => handleTooltipToggle('conditions')}
+                            onTouchStart={() => handleTooltipShow('conditions')}
+                            onMouseEnter={() => handleTooltipShow('conditions')}
                           >
                             <FiInfo />
                           </InfoIcon>

@@ -187,7 +187,8 @@ const AdditionalInfo = ({
           <h4>Air Quality</h4>
           <InfoIcon 
             ref={aqiInfoIconRef}
-            onClick={() => handleTooltipShow('aqi')}
+            onTouchStart={() => handleTooltipShow('aqi')}
+            onMouseEnter={() => handleTooltipShow('aqi')}
             className="info-icon"
           >
             <FiInfo />
