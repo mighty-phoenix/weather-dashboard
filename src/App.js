@@ -23,6 +23,7 @@ import {
   getTextColor
 } from './utils/weatherUtils';
 import './App.css';
+import { Analytics } from '@vercel/analytics/react';
 
 function App() {
   const {
@@ -230,6 +231,7 @@ function App() {
           ) : null}
         </AnimatePresence>
       </WeatherDashboard>
+      <Analytics />
     </AppContainer>
   );
 }
