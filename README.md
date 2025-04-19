@@ -6,6 +6,7 @@ A beautiful, modern weather dashboard built with React, featuring real-time weat
 
 ## Features
 
+- ✨ Extremely dynamic, acuurate and beautiful animations based on weather conditions
 - 🌤️ Real-time weather data from WeatherAPI.com
 - 🔍 Location search with autocomplete
 - 📍 Current location detection
