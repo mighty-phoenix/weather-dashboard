@@ -37,7 +37,7 @@ A beautiful, modern weather dashboard built with React, featuring real-time weat
 
 2. Install dependencies:
    ```bash
-   npm install
+   npm install --force
    ```
 
 3. Get an API key from [WeatherAPI.com](https://www.weatherapi.com/)
@@ -46,13 +46,7 @@ A beautiful, modern weather dashboard built with React, featuring real-time weat
    ```
    REACT_APP_WEATHER_API_KEY=your_api_key_here
    ```
-
-5. Update the API key in `src/hooks/useWeather.js`:
-   ```javascript
-   const API_KEY = process.env.REACT_APP_WEATHER_API_KEY;
-   ```
-
-6. Start the development server:
+5. Start the development server:
    ```bash
    npm start
    ```
