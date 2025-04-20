@@ -1,6 +1,7 @@
 {
-  "short_name": "Weather Dashboard",
-  "name": "Weather Dashboard",
+  "short_name": "WeatherGala",
+  "name": "WeatherGala - Advanced Weather Dashboard",
+  "description": "Get accurate weather forecasts, hourly predictions, and detailed weather information for any location worldwide.",
   "icons": [
     {
       "src": "favicon.ico",
@@ -20,6 +21,8 @@
   ],
   "start_url": ".",
   "display": "standalone",
-  "theme_color": "#000000",
-  "background_color": "#ffffff"
+  "theme_color": "#1e90ff",
+  "background_color": "#ffffff",
+  "orientation": "portrait",
+  "categories": ["weather", "utilities"]
 }

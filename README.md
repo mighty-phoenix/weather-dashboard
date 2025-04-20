@@ -2,7 +2,7 @@
 
 A beautiful, modern weather dashboard built with React, featuring real-time weather data, location search, hourly and daily forecasts, and animated weather icons.
 
-![Weather Dashboard Screenshot](screenshot.png)
+![Weather Dashboard Screenshot](public/screenshot.png)
 
 ## Features
 
