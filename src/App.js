@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { FaGithub } from 'react-icons/fa';
 import { useWeather } from './hooks/useWeather';
 import StickySearchBarComponent from './components/StickySearchBar';
 import CurrentWeather from './components/CurrentWeather';
@@ -229,7 +230,7 @@ function App() {
               />
               
                 <Attribution>
-                  Created with ❤️ by <a href="https://www.linkedin.com/in/rakshit-kumar-a8b11914b/" target="_blank" rel="noopener noreferrer">Rakshit Kumar</a>
+                  Created with ❤️ by <a href="https://www.linkedin.com/in/rakshit-kumar-a8b11914b/" target="_blank" rel="noopener noreferrer">Rakshit Kumar</a> | <a href="https://github.com/mighty-phoenix/weather-dashboard" target="_blank" rel="noopener noreferrer" style={{ display: 'inline-flex', alignItems: 'center', gap: '4px' }}><FaGithub /> GitHub - Source Code</a>
                 </Attribution>
             </motion.div>
           ) : null}
