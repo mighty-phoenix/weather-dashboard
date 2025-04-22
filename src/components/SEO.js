@@ -5,12 +5,36 @@ import { Helmet } from 'react-helmet-async';
  * SEO component for dynamic metadata updates using react-helmet-async
  * This component provides better SEO through server-side rendering
  */
-const SEO = ({ weatherData, location }) => {
+const SEO = ({ weatherData, location, error }) => {
+  // Default meta tags for the site
+  const defaultMeta = {
+    title: 'WeatherGala - Advanced Weather Dashboard & Forecasts',
+    description: 'Get accurate weather forecasts, hourly predictions, and detailed weather information for any location worldwide.',
+    keywords: 'weather, forecast, temperature, humidity, wind, precipitation, weather dashboard, weather app',
+    robots: 'index, follow'
+  };
+
+  // If there's an error, use default meta tags with noindex
+  if (error) {
+    return (
+      <Helmet>
+        <title>{defaultMeta.title}</title>
+        <meta name="description" content={defaultMeta.description} />
+        <meta name="keywords" content={defaultMeta.keywords} />
+        <meta name="robots" content="noindex, follow" />
+        <meta name="googlebot" content="noindex, follow" />
+      </Helmet>
+    );
+  }
+
+  // If no weather data is available yet, use default meta tags
   if (!weatherData || !weatherData.location) {
     return (
       <Helmet>
-        <title>WeatherGala - Advanced Weather Dashboard & Forecasts</title>
-        <meta name="description" content="Get accurate weather forecasts, hourly predictions, and detailed weather information for any location worldwide. Powered by weatherapi.com." />
+        <title>{defaultMeta.title}</title>
+        <meta name="description" content={defaultMeta.description} />
+        <meta name="keywords" content={defaultMeta.keywords} />
+        <meta name="robots" content={defaultMeta.robots} />
       </Helmet>
     );
   }
@@ -78,48 +102,25 @@ const SEO = ({ weatherData, location }) => {
       }
     }
   };
+
   return (
     <Helmet>
-      {/* Primary Meta Tags */}
-      <title>{`${currentTemp}°C ${currentCondition} in ${name} | WeatherGala`}</title>
-      <meta name="description" content={`Current weather in ${locationString}: ${currentTemp}°C, ${currentCondition}. Get hourly and daily forecasts, weather alerts, and detailed weather information for ${name}.`} />
+      <title>{`${name} Weather Forecast - Current Conditions & 10-Day Outlook | WeatherGala`}</title>
+      <meta name="description" content={`Get current weather conditions and 10-day forecast for ${locationString}. Temperature: ${currentTemp}°C, Condition: ${currentCondition}. View detailed weather information including humidity, wind speed, and more.`} />
+      <meta name="keywords" content={`${name} weather, ${locationString} forecast, ${currentCondition}, temperature, humidity, wind, weather forecast, weather dashboard`} />
+      <meta name="robots" content="index, follow" />
       
-      {/* Open Graph / Facebook */}
+      {/* Open Graph tags */}
+      <meta property="og:title" content={`${name} Weather Forecast - Current Conditions & 10-Day Outlook`} />
+      <meta property="og:description" content={`Current weather in ${locationString}: ${currentTemp}°C, ${currentCondition}. View detailed forecast and weather information.`} />
       <meta property="og:type" content="website" />
-      <meta property="og:url" content={`https://weathergala.vercel.app`} />
-      <meta property="og:title" content={`${currentTemp}°C ${currentCondition} in ${name} | WeatherGala`} />
-      <meta property="og:description" content={`Current weather in ${locationString}: ${currentTemp}°C, ${currentCondition}. Get hourly and daily forecasts, weather alerts, and detailed weather information.`} />
-      <meta property="og:image" content="https://weathergala.vercel.app/og.png" />
       
-      {/* Twitter */}
-      <meta property="twitter:card" content="summary_large_image" />
-      <meta property="twitter:url" content={`https://weathergala.vercel.app`} />
-      <meta property="twitter:title" content={`${currentTemp}°C ${currentCondition} in ${name} | WeatherGala`} />
-      <meta property="twitter:description" content={`Current weather in ${locationString}: ${currentTemp}°C, ${currentCondition}. Get hourly and daily forecasts, weather alerts, and detailed weather information.`} />
-      <meta property="twitter:image" content="https://weathergala.vercel.app/og.png" />
+      {/* Twitter Card tags */}
+      <meta name="twitter:card" content="summary" />
+      <meta name="twitter:title" content={`${name} Weather Forecast`} />
+      <meta name="twitter:description" content={`Current weather in ${locationString}: ${currentTemp}°C, ${currentCondition}`} />
       
-      {/* WhatsApp */}
-      <meta property="og:image:width" content="1200" />
-      <meta property="og:image:height" content="630" />
-      <meta property="og:site_name" content="WeatherGala" />
-      
-      {/* LinkedIn */}
-      <meta property="linkedin:card" content="summary_large_image" />
-      <meta property="linkedin:title" content={`${currentTemp}°C ${currentCondition} in ${name} | WeatherGala`} />
-      <meta property="linkedin:description" content={`Current weather in ${locationString}: ${currentTemp}°C, ${currentCondition}. Get hourly and daily forecasts, weather alerts, and detailed weather information.`} />
-      <meta property="linkedin:image" content="https://weathergala.vercel.app/og.png" />
-      
-      {/* Pinterest */}
-      <meta property="pinterest:image" content="https://weathergala.vercel.app/og.png" />
-      <meta property="pinterest:description" content={`Current weather in ${locationString}: ${currentTemp}°C, ${currentCondition}. Get hourly and daily forecasts, weather alerts, and detailed weather information.`} />
-      
-      {/* Slack */}
-      <meta name="slack-app-id" content="weather-gala" />
-      
-      {/* Canonical URL */}
-      <link rel="canonical" href={`https://weathergala.vercel.app`} />
-      
-      {/* Structured Data / JSON-LD */}
+      {/* Structured data */}
       <script type="application/ld+json">
         {JSON.stringify(structuredData)}
       </script>

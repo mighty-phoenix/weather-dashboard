@@ -55,7 +55,8 @@ export const useWeather = () => {
       setWeatherData(response.data);
       setError(null);
     } catch (err) {
-      setError('Failed to fetch weather data. Please try again.');
+      // Set a more user-friendly error message that won't be indexed
+      setError('Weather data temporarily unavailable. Please try again in a moment.');
       console.error('Error fetching weather data:', err);
     } finally {
       setLoading(false);

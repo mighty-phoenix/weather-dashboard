@@ -118,7 +118,11 @@ function App() {
     <AppContainer>
       {/* Dynamic SEO component */}
       {weatherData && (
-        <SEO weatherData={weatherData} location={location} />
+        <SEO 
+          weatherData={weatherData} 
+          location={location}
+          error={error}
+        />
       )}
       <GlobalTextColor colors={textColor} />
       <GlobalTypography />
