@@ -69,6 +69,7 @@ const StickySearchBarComponent = ({
   const [isScrolled, setIsScrolled] = useState(false);
   const [showGradient, setShowGradient] = useState(false);
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 480);
+  console.log(suggestions);
   
   // Add scroll event listener
   useEffect(() => {
@@ -236,7 +237,8 @@ const StickySearchBarComponent = ({
               onBlur={() => {
                 setSearchFocused(false);
                 if (inputText === '') {
-                  handleInputChange(localStorage.getItem('weather_dashboard_location'));
+                  const savedLocation = localStorage.getItem('weather_dashboard_location') || 'London';
+                  handleInputChange(savedLocation);
                 }
               }}
               className={searchFocused ? 'focused' : ''}
@@ -275,7 +277,7 @@ const StickySearchBarComponent = ({
             )}
             
             <AnimatePresence>
-              {suggestions.length > 0 && (
+              {Array.isArray(suggestions) && suggestions.length > 0 && (
                 <SuggestionsContainer
                   className="hide-scrollbar"
                   ref={suggestionsRef}
@@ -308,7 +310,7 @@ const StickySearchBarComponent = ({
                 </SuggestionsContainer>
               )}
               
-              {isSearching && inputText.length >= 2 && suggestions.length === 0 && (
+              {isSearching && inputText.length >= 2 && (!Array.isArray(suggestions) || suggestions.length === 0) && (
                 <SuggestionsContainer
                   className="hide-scrollbar"
                   initial={{ opacity: 0, y: -20 }}

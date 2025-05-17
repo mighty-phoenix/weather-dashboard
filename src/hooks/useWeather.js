@@ -1,5 +1,6 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import axios from 'axios';
+import { trackEvent } from '../utils/analytics';
 
 // API key for weatherapi.com
 const API_KEY = process.env.REACT_APP_WEATHER_API_KEY || 'YOUR_WEATHERAPI_COM_API_KEY';
@@ -34,6 +35,8 @@ export const useWeather = () => {
   const [isSearching, setIsSearching] = useState(false);
   // Add a ref to track initial fetch
   const initialFetchRef = useRef(false);
+  // Add debounce timer ref
+  const debounceTimerRef = useRef(null);
 
   // Fetch weather data
   const fetchWeatherData = async (query) => {
@@ -63,8 +66,8 @@ export const useWeather = () => {
     }
   };
 
-  // Fetch autocomplete suggestions
-  const fetchSuggestions = async (query) => {
+  // Fetch autocomplete suggestions with debounce
+  const fetchSuggestions = useCallback(async (query) => {
     if (!query || query.length < 2) {
       setSuggestions([]);
       return;
@@ -78,6 +81,7 @@ export const useWeather = () => {
           q: query
         }
       });
+      console.log(response.data);
       
       setSuggestions(response.data);
     } catch (err) {
@@ -86,14 +90,27 @@ export const useWeather = () => {
     } finally {
       setIsSearching(false);
     }
-  };
+  }, []);
 
-  // Handle input change
+  // Debounced version of input change handler
   const handleInputChange = (text) => {
     setInputText(text);
     setLocation(text);
-    if (!localStorage.getItem(LOCATION_STORAGE_KEY).includes(text)) {
-      fetchSuggestions(text);
+    
+    // Clear any existing timer
+    if (debounceTimerRef.current) {
+      clearTimeout(debounceTimerRef.current);
+    }
+    
+    // Check if localStorage has a value and safely compare
+    const savedLocation = localStorage.getItem(LOCATION_STORAGE_KEY);
+    if (!savedLocation || !savedLocation.includes(text)) {
+      // Set a new timer to delay the API call
+      debounceTimerRef.current = setTimeout(() => {
+        fetchSuggestions(text);
+      }, 300); // 300ms debounce time
+    } else {
+      setSuggestions([]);
     }
   };
 
@@ -101,10 +118,15 @@ export const useWeather = () => {
   const selectSuggestion = (suggestion) => {
     const locationName = suggestion.name;
     const fullName = `${locationName}`;
-    if (localStorage.getItem(LOCATION_STORAGE_KEY) !== fullName) {
-      setLocation(fullName);
-      setInputText(fullName);
-      setSuggestions([]);
+    
+    // Always update UI state
+    setLocation(fullName);
+    setInputText(fullName);
+    setSuggestions([]);
+    
+    // Only fetch new data if it's a different location
+    const currentLocation = localStorage.getItem(LOCATION_STORAGE_KEY);
+    if (currentLocation !== fullName) {
       fetchWeatherData(suggestion.url || fullName);
       
       // Save to localStorage
@@ -119,19 +141,48 @@ export const useWeather = () => {
   // Handle search submission
   const handleSearch = (e) => {
     if (e) e.preventDefault();
-    fetchWeatherData(location);
-    setSuggestions([]);
     
-    // Save to localStorage
-    try {
-      localStorage.setItem(LOCATION_STORAGE_KEY, location);
-    } catch (err) {
-      console.error('Error saving to localStorage:', err);
+    // Only fetch and track if there's actual location data
+    if (location && location.trim()) {
+      // Check if we're searching for the same location
+      const currentLocation = localStorage.getItem(LOCATION_STORAGE_KEY);
+      const shouldFetch = currentLocation !== location || !weatherData;
+      
+      if (shouldFetch) {
+        fetchWeatherData(location);
+      }
+      
+      // Track search event
+      trackEvent('User Interaction', 'Location Search', location);
+      
+      // Save to localStorage only if it's a new location
+      if (currentLocation !== location) {
+        try {
+          localStorage.setItem(LOCATION_STORAGE_KEY, location);
+        } catch (err) {
+          console.error('Error saving to localStorage:', err);
+        }
+      }
     }
+    
+    // Always clear suggestions
+    setSuggestions([]);
   };
+
+  // Clear debounce timer when component unmounts
+  useEffect(() => {
+    return () => {
+      if (debounceTimerRef.current) {
+        clearTimeout(debounceTimerRef.current);
+      }
+    };
+  }, []);
 
   // Get current location
   const getCurrentLocation = () => {
+    // Track geolocation request event
+    trackEvent('User Interaction', 'Use Current Location');
+    
     if (navigator.geolocation) {
       // Set options for better compatibility with mobile Safari
       const options = {
@@ -233,7 +284,10 @@ export const useWeather = () => {
 
   // Toggle temperature unit
   const toggleUnit = () => {
-    setUnit(prevUnit => prevUnit === 'C' ? 'F' : 'C');
+    const newUnit = unit === 'C' ? 'F' : 'C';
+    setUnit(newUnit);
+    // Track unit toggle event
+    trackEvent('User Interaction', 'Toggle Temperature Unit', `Changed to ${newUnit}`);
   };
 
   // Get temperature in the current unit
@@ -249,11 +303,17 @@ export const useWeather = () => {
 
   // Select a featured location
   const selectFeaturedLocation = (locationName) => {
+    // Always update UI state
+    setLocation(locationName);
+    setInputText(locationName);
+    setSuggestions([]);
+    
+    // Track featured location selection (even if it's the same city, user clicked it)
+    trackEvent('User Interaction', 'Select Featured Location', locationName);
+    
+    // Only fetch new data and update localStorage if it's a different location
     if (location !== locationName) {
-      setLocation(locationName);
-      setInputText(locationName);
       fetchWeatherData(locationName);
-      setSuggestions([]);
       
       // Save to localStorage
       try {

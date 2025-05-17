@@ -4,6 +4,16 @@ import { HelmetProvider } from 'react-helmet-async';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+import { initializeGA, trackPageView, initializeSessionTracking } from './utils/analytics';
+
+// Initialize Google Analytics
+initializeGA();
+
+// Track initial page view
+trackPageView(window.location.pathname + window.location.search);
+
+// Initialize session duration tracking
+initializeSessionTracking();
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
